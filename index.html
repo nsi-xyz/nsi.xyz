@@ -63,9 +63,10 @@ p{margin:0}
 .nav__cta{display:flex;gap:.5rem}
 
 /* ---------- Hero ---------- */
-.hero{position:relative;padding:calc(var(--nav-h) + 4.5rem) 0 4rem;text-align:center;overflow:hidden;overflow:clip}
-.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--w4) 1px,transparent 1px),linear-gradient(90deg,var(--w4) 1px,transparent 1px);background-size:64px 64px;background-position:center top;-webkit-mask-image:radial-gradient(70% 60% at 50% 35%,#000 20%,transparent 75%);mask-image:radial-gradient(70% 60% at 50% 35%,#000 20%,transparent 75%);pointer-events:none}
-.hero::after{content:"";position:absolute;left:50%;top:10%;width:min(70rem,140vw);height:36rem;transform:translateX(-50%);background:radial-gradient(closest-side,#72fd4e26,#72fd4e0a 55%,transparent);filter:blur(20px);pointer-events:none}
+.hero{position:relative;z-index:2;padding:calc(var(--nav-h) + 4.5rem) 0 4rem;text-align:center}
+.hero__bg{position:absolute;inset:0;overflow:hidden;overflow:clip;pointer-events:none}
+.hero__bg::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--w4) 1px,transparent 1px),linear-gradient(90deg,var(--w4) 1px,transparent 1px);background-size:64px 64px;background-position:center top;-webkit-mask-image:radial-gradient(70% 60% at 50% 35%,#000 20%,transparent 75%);mask-image:radial-gradient(70% 60% at 50% 35%,#000 20%,transparent 75%);pointer-events:none}
+.hero__bg::after{content:"";position:absolute;left:50%;top:10%;width:min(70rem,140vw);height:36rem;transform:translateX(-50%);background:radial-gradient(closest-side,#72fd4e26,#72fd4e0a 55%,transparent);filter:blur(20px);animation:breathe 9s ease-in-out infinite alternate}
 .hero .wrap{position:relative;z-index:1}
 .pill{display:inline-flex;align-items:center;gap:.6rem;padding:.35rem .9rem .35rem .45rem;border-radius:999px;background:var(--w4);box-shadow:inset 0 0 0 1px var(--w8);font-size:.85rem;color:var(--w73);transition:background .2s}
 .pill:hover{background:var(--w8);color:var(--white)}
@@ -184,17 +185,60 @@ p{margin:0}
 .window__bar{display:flex;align-items:center;gap:.4rem;padding:.75rem 1rem;border-bottom:1px solid var(--w8)}
 .window__bar i{width:9px;height:9px;border-radius:50%;background:var(--w24)}
 .window__bar span{margin-left:.6rem;font:400 .76rem var(--f-mono);color:var(--w50)}
-.window__body{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;padding:1rem}
-.window__body div{padding:.9rem;border-radius:12px;background:var(--w4);box-shadow:inset 0 0 0 1px var(--w6)}
-.window__body b{display:block;font:600 1rem var(--f-display);letter-spacing:-.02em}
-.window__body small{color:var(--w50);font-size:.78rem}
-.window__stamp{margin:0 1rem 1rem;padding:.55rem .8rem;border-radius:10px;background:#fff4d614;color:#f0d58a;font:500 .76rem var(--f-mono)}
+.term{min-height:13.5rem;margin:0;padding:1.1rem 1.2rem 1.3rem;font:400 .85rem/1.75 var(--f-mono);color:var(--w73);white-space:pre-wrap}
+.term .pr{color:var(--green)}
+.term .dir{color:var(--white);font-weight:500}
+.term .note{color:#f0d58a}
 
 /* ---------- Pied de page ---------- */
 .footer{padding:2.5rem 0 3rem;border-top:1px solid var(--w6);color:var(--w50);font-size:.85rem}
 .footer .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem 2rem}
 .footer nav{display:flex;flex-wrap:wrap;gap:1.4rem}
 .footer a:hover{color:var(--white)}
+
+/* ---------- Ciel étoilé ---------- */
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main,.footer{position:relative;z-index:1}
+
+/* ---------- Animations constantes ---------- */
+.caret{display:inline-block;width:.09em;height:.78em;margin-left:.1em;vertical-align:-.03em;background:var(--green);box-shadow:0 0 18px var(--green);animation:blink 1.1s steps(1) infinite}
+.term .caret{width:.55em;height:1.05em;margin:0;vertical-align:-.18em;box-shadow:none}
+.facts li::before{animation:pulse 2.4s ease-in-out infinite}
+.facts li:nth-child(2)::before{animation-delay:.8s}
+.facts li:nth-child(3)::before{animation-delay:1.6s}
+.tile--glow{position:relative;overflow:hidden}
+.tile--glow::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffffffa6 50%,transparent 65%);transform:translateX(-130%);animation:shine 7s ease-in-out infinite}
+.bento>:nth-child(2) .tile--glow::after{animation-delay:1s}
+.bento>:nth-child(3) .tile--glow::after{animation-delay:2s}
+.bento>:nth-child(4) .tile--glow::after{animation-delay:3s}
+.bento>:nth-child(5) .tile--glow::after{animation-delay:4s}
+.bento>:nth-child(6) .tile--glow::after{animation-delay:5s}
+.bento>:nth-child(7) .tile--glow::after{animation-delay:6s}
+.ticker{position:relative;z-index:1;overflow:hidden;border-block:1px solid var(--w6);background:#0108088c;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.ticker__track{display:flex;width:max-content;animation:tick 70s linear infinite}
+.ticker:hover .ticker__track{animation-play-state:paused}
+.ticker__track>span{display:block;padding:.95rem 1.2rem;font:400 .82rem var(--f-mono);color:var(--w50);white-space:pre}
+.ticker__track>span::before{content:"";display:inline-block;width:5px;height:5px;margin-right:.9rem;vertical-align:.15em;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.ticker b{font-weight:400;color:var(--green)}
+@keyframes blink{50%{opacity:0}}
+@keyframes pulse{50%{opacity:.35;box-shadow:0 0 2px var(--green)}}
+@keyframes shine{0%,72%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+@keyframes tick{to{transform:translateX(-50%)}}
+@keyframes breathe{to{opacity:.6;transform:translateX(-50%) scale(1.12)}}
+
+/* ---------- Easter egg : la Matrice ---------- */
+.matrix{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#000;opacity:0;transition:opacity .6s}
+.matrix.is-on{opacity:1}
+.matrix canvas{position:absolute;inset:0;width:100%;height:100%}
+.matrix__msg{position:relative;max-width:min(26rem,calc(100% - 2rem));padding:1.6rem 1.8rem;border-radius:20px;background:#000c;box-shadow:inset 0 0 0 1px #72fd4e59,0 0 60px #72fd4e33;text-align:center;font:400 .9rem/1.5 var(--f-mono);color:var(--green)}
+.matrix__msg b{display:block;margin-bottom:.6rem;font:600 1.5rem/1.1 var(--f-display);letter-spacing:-.03em;color:var(--white)}
+.matrix__msg a{text-decoration:underline}
+.matrix__msg small{display:block;margin-top:.9rem;color:var(--w50)}
+
+@media (prefers-reduced-motion:reduce){
+  .caret,.facts li::before,.tile--glow::after,.ticker__track,.hero__bg::after{animation:none}
+  .ticker{overflow-x:auto}
+}
 
 /* ---------- Apparition ---------- */
 @media (prefers-reduced-motion:no-preference){
@@ -227,6 +271,7 @@ p{margin:0}
 </style>
 </head>
 <body>
+<canvas id="sky" aria-hidden="true"></canvas>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-arrow" viewBox="0 0 12 12" fill="none"><path d="M4.25 10.25 8.5 6 4.25 1.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -253,9 +298,10 @@ p{margin:0}
 <main>
   <!-- ================= HERO ================= -->
   <section class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
     <div class="wrap">
       <a class="pill reveal" href="#archive"><span class="pill__tag">Nouveau</span>Le portail nsi.xyz fait peau neuve — l’archive v2 reste en ligne</a>
-      <h1 class="reveal">Toute la NSI, <span>au même endroit</span></h1>
+      <h1 class="reveal">Toute la NSI, <span>au même endroit</span><i class="caret" aria-hidden="true"></i></h1>
       <p class="hero__lead reveal">Espace de classe, IDE Python, révisions, outils NumWorks et projets des élèves : tous les sites de la spécialité Numérique et Sciences de l’Informatique, réunis ici.</p>
 
       <div class="search reveal" role="search">
@@ -287,6 +333,8 @@ p{margin:0}
       </ul>
     </div>
   </section>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker__track"><span>print(<b>"Bonjour, NSI"</b>)</span><span>42 == <b>0b101010</b></span><span><b>def</b> fact(n): <b>return</b> 1 <b>if</b> n == 0 <b>else</b> n * fact(n - 1)</span><span><b>SELECT</b> nom <b>FROM</b> eleves <b>WHERE</b> spe = <b>'NSI'</b>;</span><span><b>while</b> True: apprendre()</span><span>git commit -m <b>"projet terminé"</b></span><span>0.1 + 0.2 == 0.3  <b># False</b></span><span>pile.append(x)  file.popleft()</span><span>&lt;h1&gt;Hello, world&lt;/h1&gt;</span><span>tri_fusion → <b>O(n log n)</b></span><span>ping nsi.xyz</span><span><b>not</b> (a <b>and</b> b) == (<b>not</b> a) <b>or</b> (<b>not</b> b)</span><span>print(<b>"Bonjour, NSI"</b>)</span><span>42 == <b>0b101010</b></span><span><b>def</b> fact(n): <b>return</b> 1 <b>if</b> n == 0 <b>else</b> n * fact(n - 1)</span><span><b>SELECT</b> nom <b>FROM</b> eleves <b>WHERE</b> spe = <b>'NSI'</b>;</span><span><b>while</b> True: apprendre()</span><span>git commit -m <b>"projet terminé"</b></span><span>0.1 + 0.2 == 0.3  <b># False</b></span><span>pile.append(x)  file.popleft()</span><span>&lt;h1&gt;Hello, world&lt;/h1&gt;</span><span>tri_fusion → <b>O(n log n)</b></span><span>ping nsi.xyz</span><span><b>not</b> (a <b>and</b> b) == (<b>not</b> a) <b>or</b> (<b>not</b> b)</span></div></div>
 
   <!-- ================= NIVEAU 1 : ESSENTIELS ================= -->
   <section class="essentials" id="essentiels">
@@ -472,13 +520,12 @@ p{margin:0}
       </div>
       <a class="window reveal" href="https://nsi.xyz/v2/" aria-label="Ouvrir l’archive v2">
         <div class="window__bar"><i></i><i></i><i></i><span>nsi.xyz/v2/</span></div>
-        <div class="window__body">
-          <div><b>Spécialité NSI</b><small>Découvrir la spécialité</small></div>
-          <div><b>Projets</b><small>Réalisés par les élèves</small></div>
-          <div><b>Tutoriels</b><small>Apprendre pas à pas</small></div>
-          <div><b>Art</b><small>Quand le code dessine</small></div>
-        </div>
-        <div class="window__stamp">● archive figée — lecture seule</div>
+        <pre class="term" id="term"><span class="pr">$</span> cd v2/
+<span class="pr">$</span> ls
+<span class="dir">specialite/  projets/  tutoriels/  art/  numworks/</span>
+<span class="pr">$</span> cat LISEZMOI.txt
+<span class="note">Archive figée 2021-2026 · lecture seule</span>
+<span class="pr">$</span> <span class="caret"></span></pre>
       </a>
     </div>
   </section>
@@ -557,6 +604,142 @@ p{margin:0}
     }
   });
   document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => { q.value = c.dataset.q; q.focus(); render(); }));
+
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Ciel étoilé : étoiles qui scintillent, légère parallaxe au défilement, étoiles filantes
+  const sky = document.getElementById('sky'), ctx = sky.getContext('2d');
+  let W = 0, H = 0, stars = [], meteors = [], nextMeteor = 1200, prev = 0;
+  const sizeSky = () => {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    sky.width = W * dpr; sky.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stars = Array.from({ length: Math.round(W * H / 5000) }, () => ({
+      x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.1 + .25,
+      a: Math.random() * .55 + .2, p: Math.random() * 6.28, s: Math.random() * .0016 + .0004, g: Math.random() < .15
+    }));
+  };
+  const launch = () => {
+    const ang = (Math.random() < .5 ? 1 : -1) * (Math.PI / 7 + Math.random() * .3);
+    meteors.push({ x: W * (.15 + Math.random() * .7), y: Math.random() * H * .35, vx: Math.sin(ang) * .9, vy: Math.cos(ang) * .55, len: 140 + Math.random() * 120, life: 0, max: 1100 + Math.random() * 600 });
+  };
+  const drawSky = t => {
+    const dt = Math.min(t - prev, 50); prev = t;
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      const y = ((s.y - scrollY * .06 * s.r) % H + H) % H;
+      const a = calm ? s.a : s.a * (.55 + .45 * Math.sin(t * s.s + s.p));
+      ctx.fillStyle = s.g ? `rgba(114,253,78,${a})` : `rgba(255,255,255,${a})`;
+      ctx.beginPath(); ctx.arc(s.x, y, s.r, 0, 6.28); ctx.fill();
+    }
+    if (calm) return;
+    if ((nextMeteor -= dt) <= 0) { launch(); nextMeteor = 2200 + Math.random() * 4500; }
+    meteors = meteors.filter(m => {
+      m.life += dt; m.x += m.vx * dt; m.y += m.vy * dt;
+      const k = m.life / m.max, fade = k < .15 ? k / .15 : 1 - (k - .15) / .85;
+      const n = Math.hypot(m.vx, m.vy), tx = m.x - m.vx / n * m.len, ty = m.y - m.vy / n * m.len;
+      const g = ctx.createLinearGradient(m.x, m.y, tx, ty);
+      g.addColorStop(0, `rgba(255,255,255,${fade})`); g.addColorStop(.25, `rgba(114,253,78,${fade * .55})`); g.addColorStop(1, 'rgba(114,253,78,0)');
+      ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.fillStyle = `rgba(255,255,255,${fade})`; ctx.beginPath(); ctx.arc(m.x, m.y, 1.6, 0, 6.28); ctx.fill();
+      return m.life < m.max;
+    });
+  };
+  const loop = t => { if (!document.hidden) drawSky(t); requestAnimationFrame(loop); };
+  sizeSky(); addEventListener('resize', () => { sizeSky(); if (calm) drawSky(0); });
+  if (calm) { drawSky(0); addEventListener('scroll', () => drawSky(0), { passive: true }); }
+  else requestAnimationFrame(loop);
+
+  // Recherche : la suggestion se tape toute seule tant que le champ est vide
+  if (!calm) {
+    const ideas = ['python', 'réviser le bac', 'numworks', 'formulaire GET', 'jeu de civilisation', 'mot de passe', 'projets des élèves'];
+    let i = 0, n = 0, back = false;
+    const typeHint = () => {
+      const w = ideas[i];
+      if (document.activeElement !== q && !q.value) q.placeholder = 'Trouver un site : ' + w.slice(0, n);
+      if (!back && n++ === w.length) { back = true; return setTimeout(typeHint, 1600); }
+      if (back && --n === 0) { back = false; i = (i + 1) % ideas.length; }
+      setTimeout(typeHint, back ? 35 : 90);
+    };
+    q.addEventListener('focus', () => q.placeholder = 'Trouver un site : python, révisions, numworks…');
+    setTimeout(typeHint, 1500);
+  }
+
+  // Terminal de l'archive : se retape en boucle quand il est visible
+  const term = document.getElementById('term');
+  if (!calm && term) {
+    const full = term.innerHTML, lines = full.split('\n');
+    let run = 0, on = false;
+    const play = async id => {
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+      while (on && id === run) {
+        let done = '';
+        for (const line of lines) {
+          const sep = done ? '\n' : '';
+          const m = line.match(/^(<span class="pr">\$<\/span> )(.*)$/);
+          if (m && !m[2].includes('caret')) {
+            // Commande : tapée lettre par lettre
+            for (let k = 0; k <= m[2].length; k++) {
+              if (id !== run) return;
+              term.innerHTML = done + sep + m[1] + m[2].slice(0, k) + '<span class="caret"></span>';
+              await wait(55 + Math.random() * 60);
+            }
+            await wait(350);
+          } else {
+            // Sortie : affichée d'un coup
+            if (id !== run) return;
+            term.innerHTML = done + sep + line;
+            await wait(220);
+          }
+          done += sep + line;
+        }
+        await wait(5000);
+      }
+    };
+    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) play(++run); else { run++; term.innerHTML = full; } }).observe(term);
+  }
+
+  // Easter egg : code Konami (↑↑↓↓←→←→BA) ou recherche « matrice »
+  let matrixOpen = false;
+  const matrix = () => {
+    if (matrixOpen) return; matrixOpen = true;
+    const box = document.createElement('div');
+    box.className = 'matrix';
+    box.innerHTML = '<canvas></canvas><div class="matrix__msg" role="dialog" aria-label="Easter egg"><b>Les spé NSI intègrent la Matrice.</b>Tu as trouvé le passage secret. La suite est sur <a href="https://trouve.nsi.xyz/">trouve.nsi.xyz</a><small>Échap ou clic pour revenir</small></div>';
+    document.body.append(box);
+    const cv = box.querySelector('canvas'), c = cv.getContext('2d'), fs = 16;
+    cv.width = innerWidth; cv.height = innerHeight;
+    const cols = Array(Math.ceil(innerWidth / fs)).fill(0).map(() => Math.random() * -50);
+    const glyphs = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ<>{}=+*NSI';
+    const id = setInterval(() => {
+      c.fillStyle = 'rgba(0,0,0,.08)'; c.fillRect(0, 0, cv.width, cv.height);
+      c.font = fs + 'px monospace';
+      cols.forEach((y, x) => {
+        c.fillStyle = Math.random() < .03 ? '#fff' : '#72fd4e';
+        c.fillText(glyphs[Math.random() * glyphs.length | 0], x * fs, y * fs);
+        cols[x] = y * fs > cv.height && Math.random() > .975 ? 0 : y + 1;
+      });
+    }, 50);
+    requestAnimationFrame(() => box.classList.add('is-on'));
+    const close = e => {
+      if (e.type === 'keydown' && e.key !== 'Escape') return;
+      if (e.target.closest && e.target.closest('a')) return;
+      box.classList.remove('is-on'); removeEventListener('keydown', close); box.removeEventListener('click', close);
+      setTimeout(() => { clearInterval(id); box.remove(); matrixOpen = false; }, 600);
+    };
+    box.addEventListener('click', close); addEventListener('keydown', close);
+  };
+  const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let pos = 0;
+  addEventListener('keydown', e => {
+    pos = e.key.toLowerCase() === konami[pos].toLowerCase() ? pos + 1 : (e.key === konami[0] ? 1 : 0);
+    if (pos === konami.length) { pos = 0; matrix(); }
+  });
+  q.addEventListener('input', () => { if (/^(matrice|matrix)$/i.test(q.value.trim())) { q.value = ''; render(); q.blur(); matrix(); } });
+
+  console.log('%c∞ nsi.xyz%c\nTu lis la console ? La spé NSI est faite pour toi.\nIndice : ↑ ↑ ↓ ↓ ← → ← → B A',
+    'font:600 20px sans-serif;color:#72fd4e', 'font:13px monospace;color:inherit');
 })();
 </script>
 </body>
