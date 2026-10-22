@@ -136,8 +136,15 @@ p{margin:0}
 .providers span{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .8rem;border-radius:12px;background:var(--w6);box-shadow:inset 0 0 0 1px var(--w8);font-size:.85rem;font-weight:500}
 .providers svg{width:15px;height:15px}
 
-/* ---------- Feuille claire avec trame ---------- */
-.sheet{position:relative;background:var(--light);color:var(--dark);border-radius:28px}
+/* ---------- Feuille carbone quadrillée ---------- */
+/* La feuille redéfinit les teintes claires en teintes sombres : les composants gardent les mêmes variables. */
+.sheet{
+  --light:#0a1212; --white:#111b1b; --dark:#eef3f1; --seasalt:#ffffff0d; --green-dk:var(--green);
+  --d4:#0000; --d6:#00000040; --d8:#ffffff14; --d12:#ffffff1f; --d50:#ffffff80; --d73:#ffffffba;
+  position:relative;color:var(--dark);border-radius:28px;
+  background:linear-gradient(#ffffff08 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,#ffffff08 1px,transparent 1px) 0 0/24px 24px,var(--light);
+  box-shadow:inset 0 1px 0 #72fd4e66,0 -20px 60px #72fd4e0f;
+}
 .frame{max-width:calc(var(--site) - 2 * var(--gutter));margin:0 auto;border-inline:1px solid var(--d8)}
 .block{position:relative;padding:5rem clamp(1.25rem,4vw,3rem);border-top:1px solid var(--d8)}
 .block:first-child{border-top:0}
@@ -149,18 +156,18 @@ p{margin:0}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
 .grid--4{grid-template-columns:repeat(4,1fr)}
 .card{position:relative;display:flex;gap:1rem;padding:1.25rem;border-radius:18px;background:var(--white);box-shadow:inset 0 0 0 1px var(--d8),0 1px 2px var(--d4);transition:box-shadow .2s,transform .2s}
-.card:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 1px #16a34a66,0 14px 30px var(--d8)}
+.card:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 1px #72fd4e66,0 14px 30px #0008}
 .card__body{display:flex;flex-direction:column;gap:.3rem;min-width:0}
 .card .host{color:var(--d50);font-size:.76rem}
 .card h3{font-size:1.12rem;letter-spacing:-.02em;line-height:1.2}
 .card p{color:var(--d73);font-size:.9rem}
 .card .go{position:absolute;top:1.1rem;right:1.1rem;width:12px;height:12px;color:var(--d50);opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .2s}
 .card:hover .go{opacity:1;transform:none;color:var(--green-dk)}
-.badge{align-self:flex-start;margin-top:.25rem;padding:.2rem .55rem;border-radius:999px;background:#fff4d6;color:#7a5200;font-size:.72rem;font-weight:500}
-.badge--audience{background:#dcfce7;color:#166534}
+.badge{align-self:flex-start;margin-top:.25rem;padding:.2rem .55rem;border-radius:999px;background:#f0d58a1f;color:#f0d58a;font-size:.72rem;font-weight:500}
+.badge--audience{background:#72fd4e1a;color:var(--green)}
 /* Démos : version compacte */
 .mini{display:flex;align-items:center;gap:.8rem;padding:.9rem 1rem;border-radius:14px;background:var(--white);box-shadow:inset 0 0 0 1px var(--d8);transition:box-shadow .2s}
-.mini:hover{box-shadow:inset 0 0 0 1px #16a34a66,0 10px 24px var(--d6)}
+.mini:hover{box-shadow:inset 0 0 0 1px #72fd4e66,0 10px 24px #0008}
 .mini .tile{width:2.25rem;height:2.25rem;font-size:.72rem}
 .mini b{display:block;font-weight:500;font-size:.92rem}
 .mini small{display:block;color:var(--d50);font:400 .74rem var(--f-mono)}
@@ -171,7 +178,7 @@ p{margin:0}
 /* Curiosités */
 .oddities{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:2.5rem;padding-top:2rem;border-top:1px dashed var(--d12);color:var(--d50);font-size:.88rem}
 .oddities a{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border-radius:999px;background:var(--seasalt);box-shadow:inset 0 0 0 1px var(--d8);color:var(--dark);font:500 .8rem var(--f-mono);transition:background .2s}
-.oddities a:hover{background:#dcfce7}
+.oddities a:hover{background:#72fd4e1f}
 
 /* ---------- Archive ---------- */
 .archive{position:relative;padding:6rem 0;overflow:hidden;overflow:clip;background:var(--black)}
@@ -244,6 +251,26 @@ main,.footer{position:relative;z-index:1}
 @media (prefers-reduced-motion:no-preference){
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
   .js .reveal.is-in{opacity:1;transform:none}
+}
+
+/* ---------- Aperçu du site survolé ---------- */
+.bento{position:relative}
+.bento>[data-site],.block>:not(.peek){position:relative;z-index:1}
+html [data-site][data-site]{transition:opacity .35s,filter .35s,transform .25s,box-shadow .25s,background .25s}
+.peek{position:absolute;z-index:0;inset:-.75rem;border-radius:28px;overflow:hidden;pointer-events:none;background:var(--black);clip-path:circle(0 at var(--x,50%) var(--y,50%));transition:clip-path .8s cubic-bezier(.2,.75,.15,1)}
+.block>.peek{inset:0;border-radius:0}
+.peek img{width:100%;height:100%;object-fit:cover;object-position:top center;transform:scale(1.08);filter:brightness(.85);transition:transform 1.2s cubic-bezier(.2,.75,.15,1),opacity .2s}
+.peek::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#01080840,transparent 30%,transparent 60%,#010808d9)}
+.peek.is-swapping img{opacity:0}
+.peek__label{position:absolute;z-index:1;right:1.25rem;bottom:1.1rem;padding:.4rem .8rem;border-radius:999px;background:#010808b3;box-shadow:inset 0 0 0 1px var(--w12);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font:400 .78rem var(--f-mono);color:var(--w73)}
+.peek__label b{font-weight:500;color:var(--green)}
+.is-peeking>.peek{clip-path:circle(150% at var(--x,50%) var(--y,50%))}
+.is-peeking>.peek img{transform:none}
+html .is-peeking [data-site]:not(.is-hot),html .is-peeking .head,html .is-peeking .oddities>span{opacity:.07;filter:blur(3px)}
+html .is-peeking .is-hot{background:#010808cc;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px #72fd4e99,0 24px 60px #000c}
+@media (prefers-reduced-motion:reduce){
+  .peek{clip-path:none;opacity:0;transition:opacity .2s}
+  .is-peeking>.peek{opacity:1}
 }
 
 /* ---------- Responsive ---------- */
@@ -737,6 +764,55 @@ main,.footer{position:relative;z-index:1}
     if (pos === konami.length) { pos = 0; matrix(); }
   });
   q.addEventListener('input', () => { if (/^(matrice|matrix)$/i.test(q.value.trim())) { q.value = ''; render(); q.blur(); matrix(); } });
+
+  // Aperçu du site survolé : la capture s'ouvre en cercle depuis le curseur et remplit la zone
+  // (captures générées par scripts/apercus.py ; souris uniquement, pas de survol sur mobile)
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const shot = a => `assets/apercus/${new URL(a.href).host}.jpg`;
+    const missing = new Set();
+    document.querySelectorAll('.bento, .block').forEach(zone => {
+      const peek = document.createElement('div');
+      peek.className = 'peek'; peek.setAttribute('aria-hidden', 'true');
+      peek.innerHTML = '<img alt=""><span class="peek__label">Aperçu · <b></b></span>';
+      zone.prepend(peek);
+      const img = peek.querySelector('img'), label = peek.querySelector('b');
+      let hot = null, cur = '', timer = 0;
+      const at = e => {
+        const r = zone.getBoundingClientRect();
+        zone.style.setProperty('--x', e.clientX - r.left + 'px');
+        zone.style.setProperty('--y', e.clientY - r.top + 'px');
+      };
+      const close = () => { zone.classList.remove('is-peeking'); hot?.classList.remove('is-hot'); hot = null; };
+      const open = (a, e) => {
+        const url = shot(a);
+        if (missing.has(url)) return close();
+        hot?.classList.remove('is-hot'); hot = a; a.classList.add('is-hot');
+        label.textContent = new URL(a.href).host;
+        if (url === cur) { zone.classList.add('is-peeking'); return; }
+        cur = url;
+        if (zone.classList.contains('is-peeking')) {
+          peek.classList.add('is-swapping');
+          setTimeout(() => { if (cur === url) img.src = url; }, 150);
+        } else {
+          if (e) at(e);
+          img.src = url; zone.classList.add('is-peeking');
+        }
+      };
+      img.onload = () => peek.classList.remove('is-swapping');
+      img.onerror = () => { missing.add(cur); cur = ''; close(); };
+      zone.querySelectorAll('[data-site]').forEach(a => {
+        a.addEventListener('pointerenter', e => {
+          clearTimeout(timer);
+          timer = setTimeout(() => open(a, e), zone.classList.contains('is-peeking') ? 60 : 160);
+        });
+        a.addEventListener('focus', () => open(a));
+      });
+      zone.addEventListener('pointerleave', e => { clearTimeout(timer); at(e); timer = setTimeout(close, 120); });
+      zone.addEventListener('focusout', e => { if (!zone.contains(e.relatedTarget)) close(); });
+    });
+    // Précharge les captures une fois la page chargée
+    setTimeout(() => document.querySelectorAll('[data-site]').forEach(a => { new Image().src = shot(a); }), 2500);
+  }
 
   console.log('%c∞ nsi.xyz%c\nTu lis la console ? La spé NSI est faite pour toi.\nIndice : ↑ ↑ ↓ ↓ ← → ← → B A',
     'font:600 20px sans-serif;color:#72fd4e', 'font:13px monospace;color:inherit');
