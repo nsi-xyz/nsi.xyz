@@ -781,39 +781,48 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
     const tilt = pv.querySelector('.preview__tilt'), layer = pv.querySelector('.preview__layer');
     const shot = a => `assets/apercus/${new URL(a.href).host}.webp`;
     const SEL = '.bento [data-site], .sheet [data-site]', GAP = 22, EDGE = 12;
-    let front = 0, cur = '', on = false, timer = 0, raf = 0, mx = 0, my = 0, x = 0, y = 0;
-    let hovered = null, nx = 0, ny = 0, tnx = 0, tny = 0;
+    // Réglages du mouvement : raideur et amortissement du ressort, angles maximum (degrés)
+    const SPRING = .08, DAMP = .68, FACE_Y = 14, FACE_X = 10, SWAY = 7;
+    const clamp = v => Math.max(-1, Math.min(1, v));
+    let front = 0, cur = '', on = false, timer = 0, raf = 0, mx = 0, my = 0;
+    let hovered = null, hiddenAt = -1e9, side = 1, W = 0, H = 0;
+    let x = 0, y = 0, vx = 0, vy = 0, rx = 0, ry = 0, rz = 0;
 
-    // Position voulue : en bas à droite du curseur, ou de l'autre côté près des bords
+    // Position voulue. La fenêtre ne change de côté qu'en traversant le milieu de l'écran,
+    // pas à chaque carte : elle ne saute plus d'un bord à l'autre.
     const target = () => {
-      const w = pv.offsetWidth, h = pv.offsetHeight;
-      const right = mx + GAP + w < innerWidth - EDGE, below = my + GAP + h < innerHeight - EDGE;
-      pv.style.setProperty('--ox', right ? '0' : '100%');
+      if (mx > innerWidth * .62) side = -1; else if (mx < innerWidth * .38) side = 1;
+      const left = Math.max(EDGE, Math.min(innerWidth - EDGE - W, side > 0 ? mx + GAP : mx - GAP - W));
+      const below = my + GAP + H < innerHeight - EDGE;
+      pv.style.setProperty('--ox', side > 0 ? '0' : '100%');
       pv.style.setProperty('--oy', below ? '0' : '100%');
-      return [right ? mx + GAP : mx - GAP - w, below ? my + GAP : Math.max(EDGE, my - GAP - h)];
+      return [left, below ? my + GAP : Math.max(EDGE, my - GAP - H)];
     };
-    // Position du curseur dans la carte survolée, de -1 à 1 sur chaque axe
-    const aim = () => {
-      if (!hovered) return;
-      const r = hovered.getBoundingClientRect(), clamp = v => Math.max(-1, Math.min(1, v));
-      tnx = clamp((mx - r.left) / r.width * 2 - 1);
-      tny = clamp((my - r.top) / r.height * 2 - 1);
-    };
-    // Chaque image : la fenêtre rattrape le curseur, s'incline vers lui,
-    // la capture glisse en sens inverse (parallaxe) et le reflet suit la souris
+    // Chaque image : la fenêtre suit le curseur avec un ressort, se tourne vers lui en 3D
+    // et penche dans le sens de son déplacement ; la capture glisse en parallaxe
+    // et le reflet se place du côté du curseur.
     const follow = () => {
-      const [tx, ty] = target(), k = calm ? 1 : .18;
-      x += (tx - x) * k; y += (ty - y) * k;
-      pv.style.transform = `translate3d(${x}px,${y}px,0)`;
-      if (!calm) {
-        nx += (tnx - nx) * .1; ny += (tny - ny) * .1;
-        tilt.style.transform = `rotateX(${-ny * 7}deg) rotateY(${nx * 9}deg)`;
-        layer.style.transform = `translate3d(${-nx * 3.5}%,${-ny * 3.5}%,0)`;
-        pv.style.setProperty('--gx', 50 + nx * 45 + '%');
-        pv.style.setProperty('--gy', 30 + ny * 45 + '%');
+      const [tx, ty] = target();
+      if (calm) { x = tx; y = ty; vx = vy = 0; }
+      else {
+        vx = (vx + (tx - x) * SPRING) * DAMP; x += vx;
+        vy = (vy + (ty - y) * SPRING) * DAMP; y += vy;
       }
-      const moving = Math.abs(tx - x) + Math.abs(ty - y) > .5 || Math.abs(tnx - nx) + Math.abs(tny - ny) > .005;
-      raf = on || moving ? requestAnimationFrame(follow) : 0;
+      pv.style.transform = `translate3d(${x}px,${y}px,0)`;
+      let settled = Math.abs(tx - x) + Math.abs(ty - y) < .5 && Math.abs(vx) + Math.abs(vy) < .05;
+      if (!calm) {
+        const fx = clamp((mx - x - W / 2) / W), fy = clamp((my - y - H / 2) / H);
+        const tRy = fx * FACE_Y + clamp(vx / 30) * SWAY;
+        const tRx = -fy * FACE_X - clamp(vy / 30) * SWAY * .7;
+        const tRz = clamp(vx / 45) * 2.5;
+        ry += (tRy - ry) * .14; rx += (tRx - rx) * .14; rz += (tRz - rz) * .14;
+        tilt.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg)`;
+        layer.style.transform = `translate3d(${(-ry / FACE_Y * 3).toFixed(2)}%,${(rx / FACE_X * 3).toFixed(2)}%,0)`;
+        pv.style.setProperty('--gx', 50 + fx * 45 + '%');
+        pv.style.setProperty('--gy', 50 + fy * 45 + '%');
+        settled = settled && Math.abs(tRy - ry) + Math.abs(tRx - rx) + Math.abs(tRz - rz) < .05;
+      }
+      raf = on || !settled ? requestAnimationFrame(follow) : 0;
     };
     // Deux images superposées pour un fondu propre d'un site à l'autre
     const load = a => {
@@ -832,22 +841,29 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
     };
     const show = a => {
       load(a);
-      if (!on) { [x, y] = target(); pv.style.transform = `translate3d(${x}px,${y}px,0)`; nx = ny = 0; }
+      W = pv.offsetWidth; H = pv.offsetHeight;
+      // Repart du curseur seulement si la fenêtre a eu le temps de disparaître ;
+      // sinon elle continue son trajet depuis là où elle est
+      if (!on && performance.now() - hiddenAt > 400) {
+        [x, y] = target(); vx = vy = rx = ry = rz = 0;
+        pv.style.transform = `translate3d(${x}px,${y}px,0)`;
+      }
       on = true; pv.classList.add('is-on');
       if (!raf) raf = requestAnimationFrame(follow);
     };
-    const hide = () => { on = false; pv.classList.remove('is-on'); };
+    const hide = () => { if (on) hiddenAt = performance.now(); on = false; pv.classList.remove('is-on'); };
 
     // La carte sous le curseur est recalculée à chaque mouvement et à chaque défilement :
-    // l'état se corrige tout seul, même si un événement d'entrée ou de sortie est manqué
+    // l'état se corrige tout seul, même si un événement d'entrée ou de sortie est manqué.
+    // Entre deux cartes, la fenêtre reste ouverte un court instant (pas de clignotement).
     const setHovered = card => {
       if (card === hovered) return;
       hovered = card; clearTimeout(timer);
-      timer = card ? setTimeout(() => show(card), on ? 0 : 140) : setTimeout(hide, 90);
+      timer = card ? setTimeout(() => show(card), on ? 0 : 120) : setTimeout(hide, 260);
     };
     addEventListener('pointermove', e => {
       mx = e.clientX; my = e.clientY;
-      setHovered(e.target.closest?.(SEL) || null); aim();
+      setHovered(e.target.closest?.(SEL) || null);
     }, { passive: true });
     let queued = false;
     addEventListener('scroll', () => {
@@ -855,9 +871,10 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
       queued = true;
       requestAnimationFrame(() => {
         queued = false;
-        setHovered(document.elementFromPoint(mx, my)?.closest(SEL) || null); aim();
+        setHovered(document.elementFromPoint(mx, my)?.closest(SEL) || null);
       });
     }, { passive: true });
+    addEventListener('resize', () => { if (on) { W = pv.offsetWidth; H = pv.offsetHeight; } });
     document.documentElement.addEventListener('pointerleave', () => setHovered(null));
     // Précharge les captures une fois la page chargée
     setTimeout(() => document.querySelectorAll('[data-site]').forEach(a => { new Image().src = shot(a); }), 3000);
