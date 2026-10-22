@@ -253,24 +253,24 @@ main,.footer{position:relative;z-index:1}
   .js .reveal.is-in{opacity:1;transform:none}
 }
 
-/* ---------- Aperçu du site survolé ---------- */
-.bento{position:relative}
-.bento>[data-site],.block>:not(.peek){position:relative;z-index:1}
-html [data-site][data-site]{transition:opacity .35s,filter .35s,transform .25s,box-shadow .25s,background .25s}
-.peek{position:absolute;z-index:0;inset:-.75rem;border-radius:28px;overflow:hidden;pointer-events:none;background:var(--black);clip-path:circle(0 at var(--x,50%) var(--y,50%));transition:clip-path .8s cubic-bezier(.2,.75,.15,1)}
-.block>.peek{inset:0;border-radius:0}
-.peek img{width:100%;height:100%;object-fit:cover;object-position:top center;transform:scale(1.08);filter:brightness(.85);transition:transform 1.2s cubic-bezier(.2,.75,.15,1),opacity .2s}
-.peek::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#01080840,transparent 30%,transparent 60%,#010808d9)}
-.peek.is-swapping img{opacity:0}
-.peek__label{position:absolute;z-index:1;right:1.25rem;bottom:1.1rem;padding:.4rem .8rem;border-radius:999px;background:#010808b3;box-shadow:inset 0 0 0 1px var(--w12);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font:400 .78rem var(--f-mono);color:var(--w73)}
-.peek__label b{font-weight:500;color:var(--green)}
-.is-peeking>.peek{clip-path:circle(150% at var(--x,50%) var(--y,50%))}
-.is-peeking>.peek img{transform:none}
-html .is-peeking [data-site]:not(.is-hot),html .is-peeking .head,html .is-peeking .oddities>span{opacity:.07;filter:blur(3px)}
-html .is-peeking .is-hot{background:#010808cc;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px #72fd4e99,0 24px 60px #000c}
+/* ---------- Aperçu du site survolé : fenêtre de navigateur flottante ---------- */
+html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background .25s}
+.preview{position:fixed;left:0;top:0;z-index:60;width:clamp(18rem,30vw,26rem);pointer-events:none;will-change:transform}
+.preview__win{border-radius:14px;overflow:hidden;background:#0b1212;box-shadow:0 0 0 1px #ffffff1a,inset 0 1px 0 #ffffff14,0 2px 4px #0006,0 24px 48px -12px #000c,0 40px 90px -30px #72fd4e40;opacity:0;transform:scale(.92) translateY(8px);filter:blur(10px);transform-origin:var(--ox,0) var(--oy,0);transition:opacity .22s ease,transform .45s cubic-bezier(.16,1,.3,1),filter .3s ease}
+.preview.is-on .preview__win{opacity:1;transform:none;filter:none}
+.preview__bar{display:flex;align-items:center;gap:.6rem;height:2.1rem;padding:0 .7rem;background:#111b1b;border-bottom:1px solid #ffffff12}
+.preview__dots{display:flex;gap:5px}
+.preview__dots i{width:8px;height:8px;border-radius:50%;background:#ffffff24}
+.preview__url{flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;height:1.35rem;margin-right:1.6rem;border-radius:7px;background:#ffffff0d;font:400 .72rem var(--f-mono);color:var(--w73);white-space:nowrap;overflow:hidden}
+.preview__url svg{flex:none;width:9px;height:9px;color:var(--green)}
+.preview__shot{position:relative;aspect-ratio:16/10;background:#0f1818}
+.preview.is-on .preview__shot{background:linear-gradient(110deg,#0f1818 35%,#17221f 50%,#0f1818 65%) 0 0/250% 100%;animation:skeleton 1.3s linear infinite}
+.preview__shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transform:scale(1.03);transition:opacity .35s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+.preview__shot img.is-shown{opacity:1;transform:none}
+@keyframes skeleton{to{background-position:-250% 0}}
 @media (prefers-reduced-motion:reduce){
-  .peek{clip-path:none;opacity:0;transition:opacity .2s}
-  .is-peeking>.peek{opacity:1}
+  .preview__win{filter:none;transform:none;transition:opacity .15s}
+  .preview.is-on .preview__shot{animation:none}
 }
 
 /* ---------- Responsive ---------- */
@@ -765,53 +765,69 @@ html .is-peeking .is-hot{background:#010808cc;-webkit-backdrop-filter:blur(12px)
   });
   q.addEventListener('input', () => { if (/^(matrice|matrix)$/i.test(q.value.trim())) { q.value = ''; render(); q.blur(); matrix(); } });
 
-  // Aperçu du site survolé : la capture s'ouvre en cercle depuis le curseur et remplit la zone
+  // Aperçu du site survolé : une fenêtre de navigateur flotte à côté du curseur
   // (captures générées par scripts/apercus.py ; souris uniquement, pas de survol sur mobile)
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const shot = a => `assets/apercus/${new URL(a.href).host}.jpg`;
-    const missing = new Set();
-    document.querySelectorAll('.bento, .block').forEach(zone => {
-      const peek = document.createElement('div');
-      peek.className = 'peek'; peek.setAttribute('aria-hidden', 'true');
-      peek.innerHTML = '<img alt=""><span class="peek__label">Aperçu · <b></b></span>';
-      zone.prepend(peek);
-      const img = peek.querySelector('img'), label = peek.querySelector('b');
-      let hot = null, cur = '', timer = 0;
-      const at = e => {
-        const r = zone.getBoundingClientRect();
-        zone.style.setProperty('--x', e.clientX - r.left + 'px');
-        zone.style.setProperty('--y', e.clientY - r.top + 'px');
+    const pv = document.createElement('div');
+    pv.className = 'preview'; pv.setAttribute('aria-hidden', 'true');
+    pv.innerHTML = '<div class="preview__win"><div class="preview__bar"><span class="preview__dots"><i></i><i></i><i></i></span>'
+      + '<span class="preview__url"><svg viewBox="0 0 10 10"><rect x="2" y="4.5" width="6" height="4.5" rx="1" fill="currentColor"/><path d="M3.3 4.5V3.4a1.7 1.7 0 0 1 3.4 0v1.1" fill="none" stroke="currentColor" stroke-width="1.1"/></svg><span></span></span></div>'
+      + '<div class="preview__shot"><img alt=""><img alt=""></div></div>';
+    document.body.append(pv);
+    const host = pv.querySelector('.preview__url span'), imgs = [...pv.querySelectorAll('img')];
+    const shot = a => `assets/apercus/${new URL(a.href).host}.webp`;
+    const GAP = 22, EDGE = 12;
+    let front = 0, cur = '', on = false, timer = 0, raf = 0, mx = 0, my = 0, x = 0, y = 0;
+
+    // Position voulue : en bas à droite du curseur, ou de l'autre côté près des bords
+    const target = () => {
+      const w = pv.offsetWidth, h = pv.offsetHeight;
+      const right = mx + GAP + w < innerWidth - EDGE, below = my + GAP + h < innerHeight - EDGE;
+      pv.style.setProperty('--ox', right ? '0' : '100%');
+      pv.style.setProperty('--oy', below ? '0' : '100%');
+      return [right ? mx + GAP : mx - GAP - w, below ? my + GAP : Math.max(EDGE, my - GAP - h)];
+    };
+    // La fenêtre rattrape le curseur en douceur
+    const follow = () => {
+      const [tx, ty] = target(), k = calm ? 1 : .18;
+      x += (tx - x) * k; y += (ty - y) * k;
+      pv.style.transform = `translate3d(${x}px,${y}px,0)`;
+      raf = on || Math.abs(tx - x) + Math.abs(ty - y) > .5 ? requestAnimationFrame(follow) : 0;
+    };
+    // Deux images superposées pour un fondu propre d'un site à l'autre
+    const load = a => {
+      const src = shot(a);
+      host.textContent = new URL(a.href).host;
+      if (src === cur) return;
+      cur = src;
+      const next = imgs[1 - front];
+      next.classList.remove('is-shown');
+      next.onload = () => {
+        if (cur !== src) return;
+        next.classList.add('is-shown'); imgs[front].classList.remove('is-shown'); front = 1 - front;
       };
-      const close = () => { zone.classList.remove('is-peeking'); hot?.classList.remove('is-hot'); hot = null; };
-      const open = (a, e) => {
-        const url = shot(a);
-        if (missing.has(url)) return close();
-        hot?.classList.remove('is-hot'); hot = a; a.classList.add('is-hot');
-        label.textContent = new URL(a.href).host;
-        if (url === cur) { zone.classList.add('is-peeking'); return; }
-        cur = url;
-        if (zone.classList.contains('is-peeking')) {
-          peek.classList.add('is-swapping');
-          setTimeout(() => { if (cur === url) img.src = url; }, 150);
-        } else {
-          if (e) at(e);
-          img.src = url; zone.classList.add('is-peeking');
-        }
-      };
-      img.onload = () => peek.classList.remove('is-swapping');
-      img.onerror = () => { missing.add(cur); cur = ''; close(); };
-      zone.querySelectorAll('[data-site]').forEach(a => {
-        a.addEventListener('pointerenter', e => {
-          clearTimeout(timer);
-          timer = setTimeout(() => open(a, e), zone.classList.contains('is-peeking') ? 60 : 160);
-        });
-        a.addEventListener('focus', () => open(a));
+      next.onerror = () => { if (cur === src) hide(); };
+      next.src = src;
+    };
+    const show = a => {
+      load(a);
+      if (!on) { [x, y] = target(); pv.style.transform = `translate3d(${x}px,${y}px,0)`; }
+      on = true; pv.classList.add('is-on');
+      if (!raf) raf = requestAnimationFrame(follow);
+    };
+    const hide = () => { on = false; pv.classList.remove('is-on'); };
+
+    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    addEventListener('scroll', () => { clearTimeout(timer); hide(); }, { passive: true });
+    document.querySelectorAll('.bento [data-site], .sheet [data-site]').forEach(a => {
+      a.addEventListener('pointerenter', e => {
+        mx = e.clientX; my = e.clientY; clearTimeout(timer);
+        timer = setTimeout(() => show(a), on ? 0 : 140);
       });
-      zone.addEventListener('pointerleave', e => { clearTimeout(timer); at(e); timer = setTimeout(close, 120); });
-      zone.addEventListener('focusout', e => { if (!zone.contains(e.relatedTarget)) close(); });
+      a.addEventListener('pointerleave', () => { clearTimeout(timer); timer = setTimeout(hide, 90); });
     });
     // Précharge les captures une fois la page chargée
-    setTimeout(() => document.querySelectorAll('[data-site]').forEach(a => { new Image().src = shot(a); }), 2500);
+    setTimeout(() => document.querySelectorAll('[data-site]').forEach(a => { new Image().src = shot(a); }), 3000);
   }
 
   console.log('%c∞ nsi.xyz%c\nTu lis la console ? La spé NSI est faite pour toi.\nIndice : ↑ ↑ ↓ ↓ ← → ← → B A',

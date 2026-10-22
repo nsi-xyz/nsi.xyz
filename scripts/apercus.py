@@ -1,6 +1,6 @@
 """Capture un aperçu de chaque site lié depuis index.html.
 
-Les images vont dans assets/apercus/<domaine>.jpg et servent à l'aperçu
+Les images vont dans assets/apercus/<domaine>.webp et servent à l'aperçu
 qui s'affiche au survol des cartes. Relancer ce script quand un site change :
 
     python scripts/apercus.py            # tous les sites
@@ -27,27 +27,34 @@ def hosts():
     return list(dict.fromkeys(found))
 
 
+# Sites qui chargent un gros programme (interpréteur Python, émulateur) : on attend en temps réel.
+SLOW = {"pyweb": 16000, "webos": 12000, "epsilon": 10000, "omega": 10000, "psi": 10000}
+
+
 def capture(host):
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
         png = pathlib.Path(tmp) / "shot.png"
-        # Le temps virtuel accélère le chargement ; certains émulateurs (NumWorks) le bloquent,
+        slow = SLOW.get(host.split(".nsi.xyz")[0])
+        # Le temps virtuel accélère le chargement ; certains émulateurs le bloquent,
         # on retente alors avec un simple délai réel.
-        for wait in ("--virtual-time-budget=8000", "--timeout=10000"):
+        waits = [f"--timeout={slow}"] if slow else ["--virtual-time-budget=8000", "--timeout=10000"]
+        for wait in waits:
             try:
                 subprocess.run([
                     CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--mute-audio",
                     "--ignore-certificate-errors", f"--user-data-dir={tmp}/profil",
-                    "--window-size=1280,800", wait,
+                    "--window-size=1280,800", "--force-device-scale-factor=2", wait,
                     f"--screenshot={png}", f"https://{host}/",
-                ], capture_output=True, timeout=60)
+                ], capture_output=True, timeout=90)
             except subprocess.TimeoutExpired:
                 continue
             if png.exists():
                 break
         if not png.exists():
             return f"ÉCHEC  {host}"
-        Image.open(png).convert("RGB").resize((960, 600), Image.LANCZOS).save(
-            OUT / f"{host}.jpg", quality=72, optimize=True, progressive=True)
+        # Capture en résolution rétina (2560×1600), réduite à 1280×800 : net sur tous les écrans
+        Image.open(png).convert("RGB").resize((1280, 800), Image.LANCZOS).save(
+            OUT / f"{host}.webp", quality=84, method=6)
         return f"ok     {host}"
 
 
