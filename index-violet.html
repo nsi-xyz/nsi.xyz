@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nsi.xyz — Numérique et Sciences de l’Informatique</title>
+<meta name="description" content="Le portail de la spécialité NSI : espace de classe, IDE Python, révisions, outils NumWorks, démos de cours et projets des élèves, réunis sur nsi.xyz.">
+<meta name="theme-color" content="#110a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%236d28d9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Arial' font-weight='700' font-size='20' fill='white'%3E%E2%88%9E%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/InstrumentSans-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<script>document.documentElement.classList.add("js")</script>
+<style>
+@font-face{font-family:"Instrument Sans";src:url(assets/fonts/InstrumentSans-SemiBold.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Geist";src:url(assets/fonts/Geist-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Geist";src:url(assets/fonts/Geist-Medium.woff2) format("woff2");font-weight:500 700;font-display:swap}
+
+:root{
+  --black:#110a22; --carbon:#1f1636; --dark:#1d073b; --light:#f8f5fd; --seasalt:#f1ecfa; --platine:#e9e3f5; --white:#fff;
+  --accent:#a78bfa; --accent-lt:#8b5cf6; --accent-dk:#6d28d9;
+  --grad:linear-gradient(135deg,#8b5cf6 0%,#6d28d9 100%);
+  --grad-text:linear-gradient(135deg,#ddd6fe 0%,#a78bfa 100%);
+  --w2:#ffffff05; --w4:#ffffff0a; --w6:#ffffff0f; --w8:#ffffff14; --w12:#ffffff1f; --w24:#ffffff3d; --w50:#ffffff80; --w73:#ffffffba;
+  --d4:#1d073b0a; --d6:#1d073b0f; --d8:#1d073b14; --d12:#1d073b1f; --d50:#1d073b80; --d73:#1d073bba;
+  --f-display:"Instrument Sans",Arial,sans-serif;
+  --f-body:"Geist",Arial,sans-serif;
+  --f-mono:ui-monospace,"SFMono-Regular","Cascadia Mono",Consolas,monospace;
+  --site:75rem; --gutter:clamp(1rem,4vw,2.5rem); --nav-h:4.5rem;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 1rem)}
+body{margin:0;background:var(--black);color:var(--white);font:400 15px/1.45 var(--f-body);letter-spacing:-.007em;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;margin:0;letter-spacing:-.04em;line-height:1.08}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--site);margin:0 auto;padding:0 var(--gutter)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Boutons (repris du style Hint) ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:.6rem;height:2.75rem;padding:0 .4rem 0 1.1rem;border-radius:16px;font-weight:600;font-size:.95rem;isolation:isolate;transition:transform .2s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1}
+.btn--main{color:var(--white)}
+.btn--main::before{background:linear-gradient(0deg,#110a2229,#110a2229),var(--grad);box-shadow:inset 0 1px #ffffff29,inset 0 0 8px #ffffff70,0 16px 32px #8b5cf614,0 8px 16px #8b5cf614,0 0 50px #8b5cf61f}
+.btn--main:hover::before{box-shadow:inset 0 1px #ffffff29,inset 0 0 8px #ffffff70,0 16px 32px #8b5cf626,0 8px 16px #8b5cf626,0 0 60px #8b5cf638}
+.btn--ghost{padding:0 1.1rem;font-weight:500}
+.btn--ghost::before{background:var(--w4);box-shadow:inset 0 0 0 1px var(--w8)}
+.btn--ghost:hover::before{background:var(--w8)}
+.btn--sm{height:2.25rem;font-size:.875rem;border-radius:12px;padding:0 .9rem}
+.btn__icon{display:grid;place-items:center;width:2rem;height:2rem;border-radius:11px;background:#ffffff47;border:1px solid #ffffff47}
+.btn__icon svg{width:12px;height:12px}
+
+/* ---------- Navigation ---------- */
+.nav{position:fixed;inset:0 0 auto;z-index:50;height:var(--nav-h);display:flex;align-items:center;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.is-scrolled{background:#110a22b8;backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-color:var(--w6)}
+.nav .wrap{display:flex;align-items:center;gap:2rem;width:100%}
+.logo{display:inline-flex;align-items:center;gap:.55rem;font:600 1.15rem/1 var(--f-display);letter-spacing:-.03em}
+.logo__mark{display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:7px;background:var(--grad);color:var(--white);font:700 1.15rem/1 Arial,sans-serif;box-shadow:0 0 18px #8b5cf640}
+.logo b{font-weight:600;color:var(--w50)}
+.nav__links{display:flex;gap:1.6rem;margin:0 auto;padding:0;list-style:none;font-size:.9rem;font-weight:500}
+.nav__links a{color:var(--w73);transition:color .2s}
+.nav__links a:hover{color:var(--white)}
+.nav__cta{display:flex;gap:.5rem}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;padding:calc(var(--nav-h) + 4.5rem) 0 4rem;text-align:center;overflow:hidden;overflow:clip}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--w4) 1px,transparent 1px),linear-gradient(90deg,var(--w4) 1px,transparent 1px);background-size:64px 64px;background-position:center top;-webkit-mask-image:radial-gradient(70% 60% at 50% 35%,#000 20%,transparent 75%);mask-image:radial-gradient(70% 60% at 50% 35%,#000 20%,transparent 75%);pointer-events:none}
+.hero::after{content:"";position:absolute;left:50%;top:10%;width:min(70rem,140vw);height:36rem;transform:translateX(-50%);background:radial-gradient(closest-side,#a78bfa26,#a78bfa0a 55%,transparent);filter:blur(20px);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.pill{display:inline-flex;align-items:center;gap:.6rem;padding:.35rem .9rem .35rem .45rem;border-radius:999px;background:var(--w4);box-shadow:inset 0 0 0 1px var(--w8);font-size:.85rem;color:var(--w73);transition:background .2s}
+.pill:hover{background:var(--w8);color:var(--white)}
+.pill__tag{padding:.15rem .55rem;border-radius:999px;background:var(--grad);color:var(--white);font-weight:600;font-size:.75rem}
+.hero h1{margin:1.6rem auto 1.2rem;max-width:15ch;font-size:clamp(2.6rem,7.2vw,4.75rem);background:linear-gradient(180deg,#fff 30%,#ffffff8c);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 span{background:var(--grad-text);-webkit-background-clip:text;background-clip:text}
+.hero__lead{max-width:36rem;margin:0 auto;color:var(--w73);font-size:clamp(1rem,1.6vw,1.125rem)}
+
+/* Barre de recherche */
+.search{position:relative;max-width:36rem;margin:2.4rem auto 0;text-align:left}
+.search__box{display:flex;align-items:center;gap:.75rem;height:3.5rem;padding:0 .6rem 0 1.1rem;border-radius:18px;background:#1b1233e6;box-shadow:inset 0 0 0 1px var(--w12),0 20px 50px #0008;transition:box-shadow .2s}
+.search__box:focus-within{box-shadow:inset 0 0 0 1px #a78bfa80,0 0 0 4px #a78bfa1a,0 20px 50px #0008}
+.search__box svg{flex:none;width:18px;height:18px;color:var(--w50)}
+.search input{flex:1;min-width:0;height:100%;border:0;background:none;color:var(--white);font:inherit;font-size:1rem;outline:none}
+.search input::placeholder{color:var(--w50)}
+.kbd{flex:none;display:grid;place-items:center;min-width:1.75rem;height:1.75rem;padding:0 .4rem;border-radius:8px;background:var(--w6);box-shadow:inset 0 0 0 1px var(--w12);font:500 .8rem var(--f-mono);color:var(--w73)}
+.results{position:absolute;left:0;right:0;top:calc(100% + .5rem);z-index:20;margin:0;padding:.4rem;list-style:none;border-radius:18px;background:#1b1233f7;box-shadow:inset 0 0 0 1px var(--w12),0 30px 60px #000a;backdrop-filter:blur(12px);max-height:22rem;overflow:auto}
+.results[hidden]{display:none}
+.results a{display:flex;align-items:center;gap:.8rem;padding:.6rem .7rem;border-radius:12px}
+.results a[aria-selected="true"],.results a:hover{background:var(--w8)}
+.results .tile{width:2rem;height:2rem;font-size:.7rem}
+.results__txt{display:flex;flex-direction:column;min-width:0}
+.results__txt b{font-weight:500;font-size:.9rem}
+.results__txt small{color:var(--w50);font:400 .78rem var(--f-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.results__empty{padding:.9rem;color:var(--w73);font-size:.9rem}
+.results__empty a{display:inline;padding:0;color:var(--accent);text-decoration:underline}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:1rem}
+.chip{padding:.35rem .8rem;border-radius:999px;border:0;background:var(--w4);box-shadow:inset 0 0 0 1px var(--w8);color:var(--w73);font:500 .82rem var(--f-body);cursor:pointer;transition:background .2s,color .2s}
+.chip:hover{background:var(--w8);color:var(--white)}
+.hero__ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin-top:2.2rem}
+.facts{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.6rem;margin:2.6rem 0 0;padding:0;list-style:none;color:var(--w50);font-size:.85rem}
+.facts li{display:flex;align-items:center;gap:.45rem}
+.facts li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+
+/* ---------- Monogrammes ---------- */
+.tile{flex:none;display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:12px;font:600 .82rem/1 var(--f-mono);letter-spacing:-.02em;background:var(--seasalt);color:var(--dark);box-shadow:inset 0 0 0 1px var(--d8)}
+.tile--glow{background:var(--grad);color:var(--white);box-shadow:inset 0 1px #ffffff80,0 8px 24px #8b5cf633}
+.tile--sym{font:400 1.3rem/1 "Segoe UI Symbol","Apple Symbols",system-ui,sans-serif}
+.card__body > .tile{margin-bottom:.65rem}
+.tile--dark{background:var(--w6);color:var(--white);box-shadow:inset 0 0 0 1px var(--w12)}
+
+/* ---------- Essentiels (bento sombre) ---------- */
+.essentials{padding:2rem 0 6rem}
+.eyebrow{display:inline-block;font:500 .75rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-dk)}
+.essentials .eyebrow{color:var(--accent)}
+.head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1rem 2rem;margin-bottom:2.25rem}
+.head h2{margin-top:.9rem;font-size:clamp(2rem,4.4vw,3.25rem)}
+.head p{max-width:26rem;color:var(--w73)}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.big{position:relative;display:flex;flex-direction:column;gap:1.1rem;min-height:15rem;padding:1.6rem;border-radius:22px;background:linear-gradient(180deg,var(--w4),var(--w2));box-shadow:inset 0 0 0 1px var(--w8);overflow:hidden;transition:box-shadow .25s,transform .25s,background .25s}
+.big::after{content:"";position:absolute;inset:auto -20% -60% 30%;height:80%;background:radial-gradient(closest-side,#a78bfa30,transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.big:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px #a78bfa59,0 20px 50px #0006}
+.big:hover::after{opacity:1}
+.big--wide{grid-column:span 2}
+.big__top{display:flex;align-items:center;justify-content:space-between}
+.host{font:500 .8rem var(--f-mono);color:var(--w50)}
+.big h3{font-size:1.6rem;letter-spacing:-.03em}
+.big p{color:var(--w73);max-width:34rem}
+.big .arrow{width:2.25rem;height:2.25rem;display:grid;place-items:center;border-radius:12px;background:var(--w6);box-shadow:inset 0 0 0 1px var(--w8);transition:background .2s,transform .2s}
+.big:hover .arrow{background:var(--grad);color:var(--white);transform:rotate(-45deg)}
+.arrow svg{width:12px;height:12px}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:auto}
+.tags span{padding:.3rem .65rem;border-radius:999px;background:var(--w4);box-shadow:inset 0 0 0 1px var(--w8);font-size:.78rem;color:var(--w73)}
+.big--login{flex-direction:row;align-items:center;gap:1.5rem;min-height:auto}
+.big--login .big__txt{flex:1;display:flex;flex-direction:column;gap:.5rem}
+.providers{display:flex;gap:.5rem}
+.providers span{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .8rem;border-radius:12px;background:var(--w6);box-shadow:inset 0 0 0 1px var(--w8);font-size:.85rem;font-weight:500}
+.providers svg{width:15px;height:15px}
+
+/* ---------- Feuille claire avec trame ---------- */
+.sheet{position:relative;background:var(--light);color:var(--dark);border-radius:28px}
+.frame{max-width:calc(var(--site) - 2 * var(--gutter));margin:0 auto;border-inline:1px solid var(--d8)}
+.block{position:relative;padding:5rem clamp(1.25rem,4vw,3rem);border-top:1px solid var(--d8)}
+.block:first-child{border-top:0}
+.block::before,.block::after{content:"";position:absolute;top:-4px;width:7px;height:7px;background:var(--light);border:1px solid var(--d12)}
+.block::before{left:-4px}.block::after{right:-4px}
+.block:first-child::before,.block:first-child::after{display:none}
+.sheet .head p{color:var(--d73)}
+.sheet .eyebrow::before{content:"[ "}.sheet .eyebrow::after{content:" ]"}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+.grid--4{grid-template-columns:repeat(4,1fr)}
+.card{position:relative;display:flex;gap:1rem;padding:1.25rem;border-radius:18px;background:var(--white);box-shadow:inset 0 0 0 1px var(--d8),0 1px 2px var(--d4);transition:box-shadow .2s,transform .2s}
+.card:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 1px #6d28d966,0 14px 30px var(--d8)}
+.card__body{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.card .host{color:var(--d50);font-size:.76rem}
+.card h3{font-size:1.12rem;letter-spacing:-.02em;line-height:1.2}
+.card p{color:var(--d73);font-size:.9rem}
+.card .go{position:absolute;top:1.1rem;right:1.1rem;width:12px;height:12px;color:var(--d50);opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .2s}
+.card:hover .go{opacity:1;transform:none;color:var(--accent-dk)}
+.badge{align-self:flex-start;margin-top:.25rem;padding:.2rem .55rem;border-radius:999px;background:#fff4d6;color:#7a5200;font-size:.72rem;font-weight:500}
+.badge--audience{background:#ede9fe;color:#5b21b6}
+/* Démos : version compacte */
+.mini{display:flex;align-items:center;gap:.8rem;padding:.9rem 1rem;border-radius:14px;background:var(--white);box-shadow:inset 0 0 0 1px var(--d8);transition:box-shadow .2s}
+.mini:hover{box-shadow:inset 0 0 0 1px #6d28d966,0 10px 24px var(--d6)}
+.mini .tile{width:2.25rem;height:2.25rem;font-size:.72rem}
+.mini b{display:block;font-weight:500;font-size:.92rem}
+.mini small{display:block;color:var(--d50);font:400 .74rem var(--f-mono)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+.split .head{margin-bottom:1.5rem}
+.split .head h2{font-size:clamp(1.6rem,3vw,2.25rem)}
+.stack{display:grid;gap:.6rem}
+/* Curiosités */
+.oddities{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:2.5rem;padding-top:2rem;border-top:1px dashed var(--d12);color:var(--d50);font-size:.88rem}
+.oddities a{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border-radius:999px;background:var(--seasalt);box-shadow:inset 0 0 0 1px var(--d8);color:var(--dark);font:500 .8rem var(--f-mono);transition:background .2s}
+.oddities a:hover{background:#ede9fe}
+
+/* ---------- Archive ---------- */
+.archive{position:relative;padding:6rem 0;overflow:hidden;overflow:clip;background:var(--black)}
+.archive::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--w4) 1px,transparent 1px),linear-gradient(90deg,var(--w4) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(60% 80% at 80% 50%,#000,transparent 70%);mask-image:radial-gradient(60% 80% at 80% 50%,#000,transparent 70%)}
+.archive .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+.archive .eyebrow{color:var(--accent)}
+.archive h2{margin:1rem 0;font-size:clamp(2rem,4.4vw,3.25rem)}
+.archive p{color:var(--w73);max-width:32rem}
+.archive__ctas{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.window{border-radius:20px;background:#1b1233;box-shadow:inset 0 0 0 1px var(--w12),0 40px 80px #000a;overflow:hidden;transform:rotate(1.5deg)}
+.window__bar{display:flex;align-items:center;gap:.4rem;padding:.75rem 1rem;border-bottom:1px solid var(--w8)}
+.window__bar i{width:9px;height:9px;border-radius:50%;background:var(--w24)}
+.window__bar span{margin-left:.6rem;font:400 .76rem var(--f-mono);color:var(--w50)}
+.window__body{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;padding:1rem}
+.window__body div{padding:.9rem;border-radius:12px;background:var(--w4);box-shadow:inset 0 0 0 1px var(--w6)}
+.window__body b{display:block;font:600 1rem var(--f-display);letter-spacing:-.02em}
+.window__body small{color:var(--w50);font-size:.78rem}
+.window__stamp{margin:0 1rem 1rem;padding:.55rem .8rem;border-radius:10px;background:#fff4d614;color:#f0d58a;font:500 .76rem var(--f-mono)}
+
+/* ---------- Pied de page ---------- */
+.footer{padding:2.5rem 0 3rem;border-top:1px solid var(--w6);color:var(--w50);font-size:.85rem}
+.footer .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem 2rem}
+.footer nav{display:flex;flex-wrap:wrap;gap:1.4rem}
+.footer a:hover{color:var(--white)}
+
+/* ---------- Apparition ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .js .reveal.is-in{opacity:1;transform:none}
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1000px){
+  .nav__links{display:none}
+  .nav .wrap{justify-content:space-between}
+  .grid,.grid--4{grid-template-columns:repeat(2,1fr)}
+  .split,.archive .wrap{grid-template-columns:1fr}
+  .window{transform:none;max-width:34rem}
+}
+@media (max-width:760px){
+  .bento{grid-template-columns:1fr}
+  .big--wide{grid-column:auto}
+  .big{min-height:auto}
+  .big--login{flex-direction:column;align-items:flex-start}
+  .nav__cta .btn--ghost{display:none}
+}
+@media (max-width:560px){
+  .grid,.grid--4{grid-template-columns:1fr}
+  .frame{border-inline:0}
+  .block::before,.block::after{display:none}
+  .window__body{grid-template-columns:1fr}
+  .kbd{display:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 12 12" fill="none"><path d="M4.25 10.25 8.5 6 4.25 1.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-out" viewBox="0 0 12 12" fill="none"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="nsi.xyz, accueil"><span class="logo__mark" aria-hidden="true">∞</span><span>nsi<b>.xyz</b></span></a>
+    <ul class="nav__links">
+      <li><a href="#essentiels">Essentiels</a></li>
+      <li><a href="#outils">Outils</a></li>
+      <li><a href="#numworks">NumWorks</a></li>
+      <li><a href="#projets">Projets</a></li>
+      <li><a href="#archive">Archive v2</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a class="btn btn--ghost btn--sm" href="https://nsi.xyz/v2/">Archive v2</a>
+      <a class="btn btn--main btn--sm" href="https://login.nsi.xyz/">Se connecter</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="wrap">
+      <a class="pill reveal" href="#archive"><span class="pill__tag">Nouveau</span>Le portail nsi.xyz fait peau neuve — l’archive v2 reste en ligne</a>
+      <h1 class="reveal">Toute la NSI, <span>au même endroit</span></h1>
+      <p class="hero__lead reveal">Espace de classe, IDE Python, révisions, outils NumWorks et projets des élèves : tous les sites de la spécialité Numérique et Sciences de l’Informatique, réunis ici.</p>
+
+      <div class="search reveal" role="search">
+        <label class="search__box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span class="sr-only">Rechercher un site nsi.xyz</span>
+          <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Trouver un site : python, révisions, numworks…" role="combobox" aria-expanded="false" aria-controls="results" aria-autocomplete="list">
+          <span class="kbd" aria-hidden="true">/</span>
+        </label>
+        <ul class="results" id="results" role="listbox" hidden></ul>
+      </div>
+      <div class="chips reveal" aria-label="Recherches rapides">
+        <button class="chip" type="button" data-q="python">Python</button>
+        <button class="chip" type="button" data-q="réviser">Réviser le bac</button>
+        <button class="chip" type="button" data-q="numworks">NumWorks</button>
+        <button class="chip" type="button" data-q="web">Web &amp; HTML</button>
+        <button class="chip" type="button" data-q="snt">SNT</button>
+        <button class="chip" type="button" data-q="jeu">Jeux</button>
+      </div>
+
+      <div class="hero__ctas reveal">
+        <a class="btn btn--main" href="https://abc.nsi.xyz/">Mon espace de classe<span class="btn__icon"><svg><use href="#i-arrow"/></svg></span></a>
+        <a class="btn btn--ghost" href="#essentiels">Parcourir les sites</a>
+      </div>
+      <ul class="facts reveal">
+        <li>Un seul compte pour tous les sites</li>
+        <li><span><span id="count">29</span> sites et applications</span></li>
+        <li>Spé NSI · SNT · Maths</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= NIVEAU 1 : ESSENTIELS ================= -->
+  <section class="essentials" id="essentiels">
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <span class="eyebrow">[ Essentiels ]</span>
+          <h2>Les sites du quotidien</h2>
+        </div>
+        <p>Ceux qu’on ouvre à chaque cours : l’espace de classe, l’éditeur Python, les révisions et les projets.</p>
+      </div>
+
+      <div class="bento">
+        <a class="big big--wide reveal" href="https://abc.nsi.xyz/" data-site data-k="ent espace classe devoirs dm flux labomep groupes plan progression ressources cours">
+          <div class="big__top"><span class="tile tile--glow">abc</span><span class="arrow"><svg><use href="#i-arrow"/></svg></span></div>
+          <div><span class="host">abc.nsi.xyz</span><h3>Espace numérique pédagogique</h3></div>
+          <p>Le point d’entrée de la classe : travail à faire, devoirs maison, fil d’actualité, groupes et progression.</p>
+          <div class="tags"><span>À faire</span><span>DM</span><span>Flux</span><span>Labomep</span><span>Mes groupes</span><span>Plan de classe</span><span>Progression</span><span>Ressources</span></div>
+        </a>
+        <a class="big reveal" href="https://py.nsi.xyz/" data-site data-k="python ide editeur code programmer">
+          <div class="big__top"><span class="tile tile--glow">py</span><span class="arrow"><svg><use href="#i-arrow"/></svg></span></div>
+          <div><span class="host">py.nsi.xyz</span><h3>IDE Python en ligne</h3></div>
+          <p>L’éditeur Python maison pensé pour les cours de NSI, avec profils d’affichage et interface responsive.</p>
+        </a>
+        <a class="big reveal" href="https://e3c.nsi.xyz/" data-site data-k="reviser revisions bac qcm sujets corriges examen epreuve">
+          <div class="big__top"><span class="tile tile--glow">e3c</span><span class="arrow"><svg><use href="#i-arrow"/></svg></span></div>
+          <div><span class="host">e3c.nsi.xyz</span><h3>Réviser la NSI</h3></div>
+          <p>Banque de questions, entraînement QCM, génération de sujets et corrigés.</p>
+        </a>
+        <a class="big reveal" href="https://workflow.nsi.xyz/" data-site data-k="ia intelligence artificielle agent opencode git github cloudflare projet jeu publier site prompt">
+          <div class="big__top"><span class="tile tile--glow">wf</span><span class="arrow"><svg><use href="#i-arrow"/></svg></span></div>
+          <div><span class="host">workflow.nsi.xyz</span><h3>Piloter une IA, publier un site</h3></div>
+          <p>Le workflow du projet NSI : OpenCode, Git, Cloudflare Pages, promptothèque… du site au jeu vidéo.</p>
+        </a>
+        <a class="big reveal" href="https://nsi42.nsi.xyz/" data-site data-k="projets eleves portail terminal retro jeux sites">
+          <div class="big__top"><span class="tile tile--glow">&gt;_</span><span class="arrow"><svg><use href="#i-arrow"/></svg></span></div>
+          <div><span class="host">nsi42.nsi.xyz</span><h3>Projets des élèves</h3></div>
+          <p>Un terminal rétro pour explorer tous les sites réalisés par les élèves de NSI.</p>
+        </a>
+        <a class="big reveal" href="https://rc.nsi.xyz/" data-site data-k="ressources epreuve pratique ep ece annales evaluateur bac">
+          <div class="big__top"><span class="tile tile--glow">rc</span><span class="arrow"><svg><use href="#i-arrow"/></svg></span></div>
+          <div><span class="host">rc.nsi.xyz</span><h3>Ressources NSI</h3></div>
+          <p>Évaluateur des épreuves pratiques et banque ECE 2026, avec les annales de l’écrit.</p>
+        </a>
+        <a class="big big--wide big--login reveal" href="https://login.nsi.xyz/" data-site data-k="connexion compte login google github se connecter">
+          <span class="tile tile--glow tile--sym">∞</span>
+          <span class="big__txt"><span class="host">login.nsi.xyz</span><h3>Un seul compte pour tous les sites</h3><p>Connexion avec Google ou GitHub, ou par QR code depuis un téléphone déjà connecté.</p></span>
+          <span class="providers" aria-hidden="true">
+            <span><svg viewBox="0 0 24 24"><path fill="#fff" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z" opacity=".95"/><path fill="#fff" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z" opacity=".75"/><path fill="#fff" d="M6.4 14a6 6 0 0 1 0-3.9V7.5H3.1a10 10 0 0 0 0 9.1L6.4 14Z" opacity=".55"/><path fill="#fff" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.5l3.3 2.6C7.2 7.8 9.4 6 12 6Z" opacity=".85"/></svg>Google</span>
+            <span><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>GitHub</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEUILLE CLAIRE ================= -->
+  <div class="sheet">
+    <div class="frame">
+
+      <!-- NIVEAU 2 : OUTILS -->
+      <section class="block" id="outils">
+        <div class="head reveal">
+          <div><span class="eyebrow">Outils en ligne</span><h2>Coder, tester, expérimenter</h2></div>
+          <p>Des environnements prêts à l’emploi, sans installation, pour la spé NSI comme pour la Seconde.</p>
+        </div>
+        <div class="grid">
+          <a class="card reveal" href="https://basthon.nsi.xyz/" data-site data-k="python console notebook jupyter basthon">
+            <span class="tile">Ba</span>
+            <span class="card__body"><span class="host">basthon.nsi.xyz</span><h3>Basthon</h3><p>Console Python ou notebook Jupyter, au choix, directement dans le navigateur.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://pyweb.nsi.xyz/" data-site data-k="python ide editeur console variables scripts">
+            <span class="tile">pw</span>
+            <span class="card__body"><span class="host">pyweb.nsi.xyz</span><h3>PyWeb</h3><p>IDE Python avec gestion de scripts, console et inspecteur de variables.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://workspace.nsi.xyz/" data-site data-k="web html css js javascript atelier pages hors ligne zip">
+            <span class="tile">&lt;/&gt;</span>
+            <span class="card__body"><span class="host">workspace.nsi.xyz</span><h3>Atelier web</h3><p>Créer des pages HTML, CSS et JS sans gérer de fichiers. 100 % local, export ZIP.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://python.snt.nsi.xyz/" data-site data-k="python seconde snt maths exercices debogueur apprendre">
+            <span class="tile">Py</span>
+            <span class="card__body"><span class="host">python.snt.nsi.xyz</span><h3>Apprendre Python en Seconde</h3><p>Exercices corrigés, erreurs expliquées en français et débogueur pas à pas.</p><span class="badge badge--audience">SNT · Maths</span></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://web.snt.nsi.xyz/" data-site data-k="web html css snt seconde enigmes quiz cours internet">
+            <span class="tile">www</span>
+            <span class="card__body"><span class="host">web.snt.nsi.xyz</span><h3>42 énigmes sur le Web</h3><p>Cours, quiz et énigmes pour découvrir HTML, CSS et l’histoire du Web.</p><span class="badge badge--audience">SNT</span></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://simulateur.nsi.xyz/" data-site data-k="physique chimie simulateurs sciences avancement lumiere son oscilloscope">
+            <span class="tile tile--sym">⚛</span>
+            <span class="card__body"><span class="host">simulateur.nsi.xyz</span><h3>Simulateurs de physique-chimie</h3><p>Avancement chimique, interaction lumière-matière, vitesse du son…</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+        </div>
+      </section>
+
+      <!-- NIVEAU 3 : NUMWORKS + DÉMOS -->
+      <section class="block">
+        <div class="split">
+          <div id="numworks">
+            <div class="head reveal">
+              <div><span class="eyebrow">NumWorks</span><h2>La calculatrice, en ligne</h2></div>
+            </div>
+            <div class="stack">
+              <a class="mini reveal" href="https://epsilon.nsi.xyz/" data-site data-k="numworks calculatrice simulateur epsilon firmware"><span class="tile tile--sym">ε</span><span><b>Simulateur Epsilon</b><small>epsilon.nsi.xyz</small></span></a>
+              <a class="mini reveal" href="https://omega.nsi.xyz/" data-site data-k="numworks calculatrice simulateur omega firmware"><span class="tile tile--sym">Ω</span><span><b>Simulateur Omega</b><small>omega.nsi.xyz</small></span></a>
+              <a class="mini reveal" href="https://psi.nsi.xyz/" data-site data-k="numworks calculatrice simulateur psi firmware"><span class="tile tile--sym">Ψ</span><span><b>Simulateur Psi</b><small>psi.nsi.xyz</small></span></a>
+              <a class="mini reveal" href="https://numaps.nsi.xyz/" data-site data-k="numworks scripts gestionnaire applications python calculatrice"><span class="tile">nm</span><span><b>Gestionnaire de scripts NumWorks</b><small>numaps.nsi.xyz · en construction</small></span></a>
+            </div>
+          </div>
+          <div id="demos">
+            <div class="head reveal">
+              <div><span class="eyebrow">Démos de cours</span><h2>Voir pour comprendre</h2></div>
+            </div>
+            <div class="stack">
+              <a class="mini reveal" href="https://css.nsi.xyz/" data-site data-k="css web style design html demo"><span class="tile">css</span><span><b>L’effet des CSS</b><small>css.nsi.xyz</small></span></a>
+              <a class="mini reveal" href="https://get.nsi.xyz/" data-site data-k="formulaire get http url web requete demo"><span class="tile">GET</span><span><b>Formulaire, méthode GET</b><small>get.nsi.xyz</small></span></a>
+              <a class="mini reveal" href="https://post.nsi.xyz/" data-site data-k="formulaire post http web requete demo"><span class="tile">POST</span><span><b>Formulaire, méthode POST</b><small>post.nsi.xyz</small></span></a>
+              <a class="mini reveal" href="https://password.nsi.xyz/" data-site data-k="mot de passe securite generateur entropie cybersecurite"><span class="tile">***</span><span><b>Générateur de mots de passe</b><small>password.nsi.xyz</small></span></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NIVEAU 4 : PROJETS & EXPÉRIENCES -->
+      <section class="block" id="projets">
+        <div class="head reveal">
+          <div><span class="eyebrow">Projets &amp; expériences</span><h2>Ce qui se construit ici</h2></div>
+          <p>Jeux, enquêtes, outils de vie de classe et autres expérimentations nées autour de la spécialité.</p>
+        </div>
+        <div class="grid">
+          <a class="card reveal" href="https://orbis.jeux.nsi.xyz/" data-site data-k="jeu jeux civilisation 4x strategie tablette orbis">
+            <span class="card__body"><span class="tile tile--sym">◈</span><span class="host">orbis.jeux.nsi.xyz</span><h3>ORBIS</h3><p>Un jeu de civilisation 4X au tour par tour, pensé pour les tablettes.</p><span class="badge">Prototype</span></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://42.nsi.xyz/" data-site data-k="42 nombre maths science fiction guide galactique">
+            <span class="card__body"><span class="tile">42</span><span class="host">42.nsi.xyz</span><h3>La réponse à la Grande Question</h3><p>Exploration interactive et ludique du nombre 42.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://ia-maths.nsi.xyz/" data-site data-k="ia intelligence artificielle maths enquete donnees data science observatoire">
+            <span class="card__body"><span class="tile">IA</span><span class="host">ia-maths.nsi.xyz</span><h3>Observatoire IA &amp; maths</h3><p>Explorer les résultats d’une enquête lycéenne sur l’usage de l’IA en maths.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://election.nsi.xyz/" data-site data-k="election delegues vote classe scrutin">
+            <span class="card__body"><span class="tile tile--sym">✓</span><span class="host">election.nsi.xyz</span><h3>Élection des délégués</h3><p>Deux tours, bulletin secret, sans serveur central ni base de données.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://webos.nsi.xyz/" data-site data-k="webos systeme exploitation bureau navigateur os">
+            <span class="card__body"><span class="tile">OS</span><span class="host">webos.nsi.xyz</span><h3>WebOS</h3><p>Un système d’exploitation qui tourne dans le navigateur.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+          <a class="card reveal" href="https://labohelp.nsi.xyz/" data-site data-k="labomep aide diagnostic robot humour">
+            <span class="card__body"><span class="tile">?</span><span class="host">labohelp.nsi.xyz</span><h3>LaboHelp</h3><p>Un assistant (pas toujours sérieux) pour diagnostiquer vos soucis sur Labomep.</p></span>
+            <svg class="go"><use href="#i-out"/></svg>
+          </a>
+        </div>
+
+        <div class="oddities reveal">
+          <span>Et pour les curieux :</span>
+          <a href="https://perdu.nsi.xyz/" data-site data-k="perdu aide egare">perdu.nsi.xyz</a>
+          <a href="https://trouve.nsi.xyz/" data-site data-k="trouve matrice">trouve.nsi.xyz</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ================= ARCHIVE V2 ================= -->
+  <section class="archive" id="archive">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="eyebrow">[ Archive v2 · 2021 – 2026 ]</span>
+        <h2>L’ancien site reste en ligne</h2>
+        <p>Tutoriels, projets, articles et applications NumWorks : l’intégralité du site 2021-2026 est conservée avec ses adresses d’origine. C’est une archive statique : elle ne reçoit plus de nouveau contenu.</p>
+        <div class="archive__ctas">
+          <a class="btn btn--main" href="https://nsi.xyz/v2/">Ouvrir l’archive v2<span class="btn__icon"><svg><use href="#i-arrow"/></svg></span></a>
+          <a class="btn btn--ghost" href="https://nsi.xyz/plan/">Plan du site</a>
+        </div>
+      </div>
+      <a class="window reveal" href="https://nsi.xyz/v2/" aria-label="Ouvrir l’archive v2">
+        <div class="window__bar"><i></i><i></i><i></i><span>nsi.xyz/v2/</span></div>
+        <div class="window__body">
+          <div><b>Spécialité NSI</b><small>Découvrir la spécialité</small></div>
+          <div><b>Projets</b><small>Réalisés par les élèves</small></div>
+          <div><b>Tutoriels</b><small>Apprendre pas à pas</small></div>
+          <div><b>Art</b><small>Quand le code dessine</small></div>
+        </div>
+        <div class="window__stamp">● archive figée — lecture seule</div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <a class="logo" href="/"><span class="logo__mark" aria-hidden="true">∞</span><span>nsi<b>.xyz</b></span></a>
+    <span>Site administré par Vincent Robert</span>
+    <nav aria-label="Liens légaux">
+      <a href="https://nsi.xyz/credits/">Crédits</a>
+      <a href="https://nsi.xyz/hebergeur/">Hébergeur</a>
+      <a href="https://nsi.xyz/politique-de-confidentialite/">Confidentialité</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // Barre de navigation : fond flouté une fois la page défilée
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('is-scrolled', scrollY > 10);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Apparition au défilement
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Index des sites, construit à partir des liens de la page
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const sites = [...document.querySelectorAll('[data-site]')].map(a => {
+    const host = new URL(a.href).host;
+    const title = (a.querySelector('h3, b') || a).textContent.trim();
+    const tile = a.querySelector('.tile')?.textContent.trim() || '·';
+    return { href: a.href, host, title, tile, hay: norm([host, title, a.textContent, a.dataset.k].join(' ')) };
+  });
+  document.getElementById('count').textContent = sites.length;
+
+  const q = document.getElementById('q');
+  const list = document.getElementById('results');
+  let matches = [], active = 0;
+
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const render = () => {
+    const terms = norm(q.value.trim()).split(/\s+/).filter(Boolean);
+    if (!terms.length) { list.hidden = true; q.setAttribute('aria-expanded', 'false'); return; }
+    matches = sites.filter(s => terms.every(t => s.hay.includes(t)));
+    active = 0;
+    list.innerHTML = matches.length
+      ? matches.map((s, i) => `<li><a href="${s.href}" role="option" aria-selected="${i === 0}"><span class="tile tile--dark">${esc(s.tile)}</span><span class="results__txt"><b>${esc(s.title)}</b><small>${s.host}</small></span></a></li>`).join('')
+      : `<li class="results__empty">Aucun site trouvé. Vous êtes <a href="https://perdu.nsi.xyz/">perdu</a> ?</li>`;
+    list.hidden = false; q.setAttribute('aria-expanded', 'true');
+  };
+  const select = i => {
+    const items = list.querySelectorAll('a[role=option]');
+    if (!items.length) return;
+    active = (i + items.length) % items.length;
+    items.forEach((a, j) => a.setAttribute('aria-selected', j === active));
+    items[active].scrollIntoView({ block: 'nearest' });
+  };
+
+  q.addEventListener('input', render);
+  q.addEventListener('focus', render);
+  q.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); select(active + 1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); select(active - 1); }
+    else if (e.key === 'Enter' && matches[active]) { location.href = matches[active].href; }
+    else if (e.key === 'Escape') { q.value = ''; render(); q.blur(); }
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('.search')) list.hidden = true; });
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== q && !/input|textarea/i.test(document.activeElement.tagName)) {
+      e.preventDefault(); q.focus();
+    }
+  });
+  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => { q.value = c.dataset.q; q.focus(); render(); }));
+})();
+</script>
+</body>
+</html>
