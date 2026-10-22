@@ -791,19 +791,25 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
     // Réglages du mouvement : raideur et amortissement du ressort
     const SPRING = .08, DAMP = .68;
     let front = 0, cur = '', on = false, timer = 0, raf = 0, mx = 0, my = 0;
-    let hovered = null, hiddenAt = -1e9, side = 1, W = 0, H = 0;
+    let hovered = null, hiddenAt = -1e9, sideX = 1, sideY = 1, W = 0, H = 0;
     let x = 0, y = 0, vx = 0, vy = 0;
+    const within = (v, min, max) => Math.max(min, Math.min(max, v));
 
-    // Position voulue. La fenêtre ne change de côté qu'en traversant le milieu de l'écran,
-    // pas à chaque carte : elle ne saute plus d'un bord à l'autre.
-    const target = () => {
-      if (mx > innerWidth * .62) side = -1; else if (mx < innerWidth * .38) side = 1;
-      const left = Math.max(EDGE, Math.min(innerWidth - EDGE - W, side > 0 ? mx + GAP : mx - GAP - W));
-      const below = my + GAP + H < innerHeight - EDGE;
-      pv.style.setProperty('--ox', side > 0 ? '0' : '100%');
-      pv.style.setProperty('--oy', below ? '0' : '100%');
-      return [left, below ? my + GAP : Math.max(EDGE, my - GAP - H)];
+    // Le côté de la fenêtre est choisi une seule fois, à l'entrée sur une carte :
+    // à droite du curseur pour une carte dans la moitié gauche de l'écran, à gauche sinon ;
+    // dessous s'il y a la place, dessus sinon. Il ne change pas tant qu'on reste sur la carte.
+    const pickSide = card => {
+      const r = card.getBoundingClientRect();
+      sideX = r.left + r.width / 2 > innerWidth / 2 ? -1 : 1;
+      sideY = my + GAP + H < innerHeight - EDGE ? 1 : -1;
+      pv.style.setProperty('--ox', sideX > 0 ? '0' : '100%');
+      pv.style.setProperty('--oy', sideY > 0 ? '0' : '100%');
     };
+    // Position voulue : collée au curseur du côté choisi, calée contre les bords de l'écran
+    const target = () => [
+      within(sideX > 0 ? mx + GAP : mx - GAP - W, EDGE, innerWidth - EDGE - W),
+      within(sideY > 0 ? my + GAP : my - GAP - H, EDGE, innerHeight - EDGE - H),
+    ];
     // Chaque image : la fenêtre suit le curseur avec un ressort amorti
     const follow = () => {
       const [tx, ty] = target();
@@ -834,6 +840,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
     const show = a => {
       load(a);
       W = pv.offsetWidth; H = pv.offsetHeight;
+      pickSide(a);
       // Repart du curseur seulement si la fenêtre a eu le temps de disparaître ;
       // sinon elle continue son trajet depuis là où elle est
       if (!on && performance.now() - hiddenAt > 400) {
