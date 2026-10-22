@@ -255,7 +255,8 @@ main,.footer{position:relative;z-index:1}
 
 /* ---------- Aperçu du site survolé : fenêtre de navigateur flottante ---------- */
 html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background .25s}
-.preview{position:fixed;left:0;top:0;z-index:60;width:clamp(18rem,30vw,26rem);pointer-events:none;will-change:transform}
+.preview{position:fixed;left:0;top:0;z-index:60;width:clamp(18rem,30vw,26rem);pointer-events:none;will-change:transform;perspective:1000px}
+.preview__tilt{transform-style:preserve-3d;will-change:transform}
 .preview__win{border-radius:14px;overflow:hidden;background:#0b1212;box-shadow:0 0 0 1px #ffffff1a,inset 0 1px 0 #ffffff14,0 2px 4px #0006,0 24px 48px -12px #000c,0 40px 90px -30px #72fd4e40;opacity:0;transform:scale(.92) translateY(8px);filter:blur(10px);transform-origin:var(--ox,0) var(--oy,0);transition:opacity .22s ease,transform .45s cubic-bezier(.16,1,.3,1),filter .3s ease}
 .preview.is-on .preview__win{opacity:1;transform:none;filter:none}
 .preview__bar{display:flex;align-items:center;gap:.6rem;height:2.1rem;padding:0 .7rem;background:#111b1b;border-bottom:1px solid #ffffff12}
@@ -263,7 +264,9 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
 .preview__dots i{width:8px;height:8px;border-radius:50%;background:#ffffff24}
 .preview__url{flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;height:1.35rem;margin-right:1.6rem;border-radius:7px;background:#ffffff0d;font:400 .72rem var(--f-mono);color:var(--w73);white-space:nowrap;overflow:hidden}
 .preview__url svg{flex:none;width:9px;height:9px;color:var(--green)}
-.preview__shot{position:relative;aspect-ratio:16/10;background:#0f1818}
+.preview__shot{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0f1818}
+.preview__layer{position:absolute;inset:-5%;will-change:transform}
+.preview__glare{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--gx,50%) var(--gy,20%),#ffffff2e,transparent 55%);mix-blend-mode:overlay}
 .preview.is-on .preview__shot{background:linear-gradient(110deg,#0f1818 35%,#17221f 50%,#0f1818 65%) 0 0/250% 100%;animation:skeleton 1.3s linear infinite}
 .preview__shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transform:scale(1.03);transition:opacity .35s ease,transform .6s cubic-bezier(.16,1,.3,1)}
 .preview__shot img.is-shown{opacity:1;transform:none}
@@ -770,14 +773,16 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const pv = document.createElement('div');
     pv.className = 'preview'; pv.setAttribute('aria-hidden', 'true');
-    pv.innerHTML = '<div class="preview__win"><div class="preview__bar"><span class="preview__dots"><i></i><i></i><i></i></span>'
+    pv.innerHTML = '<div class="preview__tilt"><div class="preview__win"><div class="preview__bar"><span class="preview__dots"><i></i><i></i><i></i></span>'
       + '<span class="preview__url"><svg viewBox="0 0 10 10"><rect x="2" y="4.5" width="6" height="4.5" rx="1" fill="currentColor"/><path d="M3.3 4.5V3.4a1.7 1.7 0 0 1 3.4 0v1.1" fill="none" stroke="currentColor" stroke-width="1.1"/></svg><span></span></span></div>'
-      + '<div class="preview__shot"><img alt=""><img alt=""></div></div>';
+      + '<div class="preview__shot"><div class="preview__layer"><img alt=""><img alt=""></div><div class="preview__glare"></div></div></div></div>';
     document.body.append(pv);
     const host = pv.querySelector('.preview__url span'), imgs = [...pv.querySelectorAll('img')];
+    const tilt = pv.querySelector('.preview__tilt'), layer = pv.querySelector('.preview__layer');
     const shot = a => `assets/apercus/${new URL(a.href).host}.webp`;
-    const GAP = 22, EDGE = 12;
+    const SEL = '.bento [data-site], .sheet [data-site]', GAP = 22, EDGE = 12;
     let front = 0, cur = '', on = false, timer = 0, raf = 0, mx = 0, my = 0, x = 0, y = 0;
+    let hovered = null, nx = 0, ny = 0, tnx = 0, tny = 0;
 
     // Position voulue : en bas à droite du curseur, ou de l'autre côté près des bords
     const target = () => {
@@ -787,12 +792,28 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
       pv.style.setProperty('--oy', below ? '0' : '100%');
       return [right ? mx + GAP : mx - GAP - w, below ? my + GAP : Math.max(EDGE, my - GAP - h)];
     };
-    // La fenêtre rattrape le curseur en douceur
+    // Position du curseur dans la carte survolée, de -1 à 1 sur chaque axe
+    const aim = () => {
+      if (!hovered) return;
+      const r = hovered.getBoundingClientRect(), clamp = v => Math.max(-1, Math.min(1, v));
+      tnx = clamp((mx - r.left) / r.width * 2 - 1);
+      tny = clamp((my - r.top) / r.height * 2 - 1);
+    };
+    // Chaque image : la fenêtre rattrape le curseur, s'incline vers lui,
+    // la capture glisse en sens inverse (parallaxe) et le reflet suit la souris
     const follow = () => {
       const [tx, ty] = target(), k = calm ? 1 : .18;
       x += (tx - x) * k; y += (ty - y) * k;
       pv.style.transform = `translate3d(${x}px,${y}px,0)`;
-      raf = on || Math.abs(tx - x) + Math.abs(ty - y) > .5 ? requestAnimationFrame(follow) : 0;
+      if (!calm) {
+        nx += (tnx - nx) * .1; ny += (tny - ny) * .1;
+        tilt.style.transform = `rotateX(${-ny * 7}deg) rotateY(${nx * 9}deg)`;
+        layer.style.transform = `translate3d(${-nx * 3.5}%,${-ny * 3.5}%,0)`;
+        pv.style.setProperty('--gx', 50 + nx * 45 + '%');
+        pv.style.setProperty('--gy', 30 + ny * 45 + '%');
+      }
+      const moving = Math.abs(tx - x) + Math.abs(ty - y) > .5 || Math.abs(tnx - nx) + Math.abs(tny - ny) > .005;
+      raf = on || moving ? requestAnimationFrame(follow) : 0;
     };
     // Deux images superposées pour un fondu propre d'un site à l'autre
     const load = a => {
@@ -811,21 +832,33 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
     };
     const show = a => {
       load(a);
-      if (!on) { [x, y] = target(); pv.style.transform = `translate3d(${x}px,${y}px,0)`; }
+      if (!on) { [x, y] = target(); pv.style.transform = `translate3d(${x}px,${y}px,0)`; nx = ny = 0; }
       on = true; pv.classList.add('is-on');
       if (!raf) raf = requestAnimationFrame(follow);
     };
     const hide = () => { on = false; pv.classList.remove('is-on'); };
 
-    addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
-    addEventListener('scroll', () => { clearTimeout(timer); hide(); }, { passive: true });
-    document.querySelectorAll('.bento [data-site], .sheet [data-site]').forEach(a => {
-      a.addEventListener('pointerenter', e => {
-        mx = e.clientX; my = e.clientY; clearTimeout(timer);
-        timer = setTimeout(() => show(a), on ? 0 : 140);
+    // La carte sous le curseur est recalculée à chaque mouvement et à chaque défilement :
+    // l'état se corrige tout seul, même si un événement d'entrée ou de sortie est manqué
+    const setHovered = card => {
+      if (card === hovered) return;
+      hovered = card; clearTimeout(timer);
+      timer = card ? setTimeout(() => show(card), on ? 0 : 140) : setTimeout(hide, 90);
+    };
+    addEventListener('pointermove', e => {
+      mx = e.clientX; my = e.clientY;
+      setHovered(e.target.closest?.(SEL) || null); aim();
+    }, { passive: true });
+    let queued = false;
+    addEventListener('scroll', () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        setHovered(document.elementFromPoint(mx, my)?.closest(SEL) || null); aim();
       });
-      a.addEventListener('pointerleave', () => { clearTimeout(timer); timer = setTimeout(hide, 90); });
-    });
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => setHovered(null));
     // Précharge les captures une fois la page chargée
     setTimeout(() => document.querySelectorAll('[data-site]').forEach(a => { new Image().src = shot(a); }), 3000);
   }
