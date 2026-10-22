@@ -30,6 +30,10 @@ def hosts():
 # Sites qui chargent un gros programme (interpréteur Python, émulateur) : on attend en temps réel.
 SLOW = {"pyweb": 16000, "webos": 12000, "epsilon": 10000, "omega": 10000, "psi": 10000}
 
+# Captures faites à la main (le site ne finit pas de charger sans fenêtre visible) :
+# ignorées lors d'une mise à jour générale, refaites seulement si on les nomme.
+MANUAL = {"pyweb"}
+
 
 def capture(host):
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
@@ -65,6 +69,8 @@ if __name__ == "__main__":
     todo = hosts()
     if sys.argv[1:]:
         todo = [h for h in todo if h.split(".nsi.xyz")[0] in sys.argv[1:]]
+    else:
+        todo = [h for h in todo if h.split(".nsi.xyz")[0] not in MANUAL]
     with concurrent.futures.ThreadPoolExecutor(4) as ex:
         for line in ex.map(capture, todo):
             print(line, flush=True)
