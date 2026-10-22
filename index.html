@@ -255,8 +255,7 @@ main,.footer{position:relative;z-index:1}
 
 /* ---------- Aperçu du site survolé : fenêtre de navigateur flottante ---------- */
 html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background .25s}
-.preview{position:fixed;left:0;top:0;z-index:60;width:clamp(18rem,30vw,26rem);pointer-events:none;will-change:transform;perspective:1000px}
-.preview__tilt{transform-style:preserve-3d;will-change:transform}
+.preview{position:fixed;left:0;top:0;z-index:60;width:clamp(18rem,30vw,26rem);pointer-events:none;will-change:transform}
 .preview__win{border-radius:14px;overflow:hidden;background:#0b1212;box-shadow:0 0 0 1px #ffffff1a,inset 0 1px 0 #ffffff14,0 2px 4px #0006,0 24px 48px -12px #000c,0 40px 90px -30px #72fd4e40;opacity:0;transform:scale(.92) translateY(8px);filter:blur(10px);transform-origin:var(--ox,0) var(--oy,0);transition:opacity .22s ease,transform .45s cubic-bezier(.16,1,.3,1),filter .3s ease}
 .preview.is-on .preview__win{opacity:1;transform:none;filter:none}
 .preview__bar{display:flex;align-items:center;gap:.6rem;height:2.1rem;padding:0 .7rem;background:#111b1b;border-bottom:1px solid #ffffff12}
@@ -264,10 +263,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
 .preview__dots i{width:8px;height:8px;border-radius:50%;background:#ffffff24}
 .preview__url{flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;height:1.35rem;margin-right:1.6rem;border-radius:7px;background:#ffffff0d;font:400 .72rem var(--f-mono);color:var(--w73);white-space:nowrap;overflow:hidden}
 .preview__url svg{flex:none;width:9px;height:9px;color:var(--green)}
-.preview__shot{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0f1818}
-.preview__layer{position:absolute;inset:-5%;will-change:transform}
-.preview__glare{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--gx,50%) var(--gy,20%),#ffffff2e,transparent 55%);mix-blend-mode:overlay}
-.preview.is-on .preview__shot{background:linear-gradient(110deg,#0f1818 35%,#17221f 50%,#0f1818 65%) 0 0/250% 100%;animation:skeleton 1.3s linear infinite}
+.preview__shot{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0f1818}.preview.is-on .preview__shot{background:linear-gradient(110deg,#0f1818 35%,#17221f 50%,#0f1818 65%) 0 0/250% 100%;animation:skeleton 1.3s linear infinite}
 .preview__shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transform:scale(1.03);transition:opacity .35s ease,transform .6s cubic-bezier(.16,1,.3,1)}
 .preview__shot img.is-shown{opacity:1;transform:none}
 @keyframes skeleton{to{background-position:-250% 0}}
@@ -773,20 +769,18 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const pv = document.createElement('div');
     pv.className = 'preview'; pv.setAttribute('aria-hidden', 'true');
-    pv.innerHTML = '<div class="preview__tilt"><div class="preview__win"><div class="preview__bar"><span class="preview__dots"><i></i><i></i><i></i></span>'
+    pv.innerHTML = '<div class="preview__win"><div class="preview__bar"><span class="preview__dots"><i></i><i></i><i></i></span>'
       + '<span class="preview__url"><svg viewBox="0 0 10 10"><rect x="2" y="4.5" width="6" height="4.5" rx="1" fill="currentColor"/><path d="M3.3 4.5V3.4a1.7 1.7 0 0 1 3.4 0v1.1" fill="none" stroke="currentColor" stroke-width="1.1"/></svg><span></span></span></div>'
-      + '<div class="preview__shot"><div class="preview__layer"><img alt=""><img alt=""></div><div class="preview__glare"></div></div></div></div>';
+      + '<div class="preview__shot"><img alt=""><img alt=""></div></div>';
     document.body.append(pv);
     const host = pv.querySelector('.preview__url span'), imgs = [...pv.querySelectorAll('img')];
-    const tilt = pv.querySelector('.preview__tilt'), layer = pv.querySelector('.preview__layer');
     const shot = a => `assets/apercus/${new URL(a.href).host}.webp`;
     const SEL = '.bento [data-site], .sheet [data-site]', GAP = 22, EDGE = 12;
-    // Réglages du mouvement : raideur et amortissement du ressort, angles maximum (degrés)
-    const SPRING = .08, DAMP = .68, FACE_Y = 14, FACE_X = 10, SWAY = 7;
-    const clamp = v => Math.max(-1, Math.min(1, v));
+    // Réglages du mouvement : raideur et amortissement du ressort
+    const SPRING = .08, DAMP = .68;
     let front = 0, cur = '', on = false, timer = 0, raf = 0, mx = 0, my = 0;
     let hovered = null, hiddenAt = -1e9, side = 1, W = 0, H = 0;
-    let x = 0, y = 0, vx = 0, vy = 0, rx = 0, ry = 0, rz = 0;
+    let x = 0, y = 0, vx = 0, vy = 0;
 
     // Position voulue. La fenêtre ne change de côté qu'en traversant le milieu de l'écran,
     // pas à chaque carte : elle ne saute plus d'un bord à l'autre.
@@ -798,9 +792,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
       pv.style.setProperty('--oy', below ? '0' : '100%');
       return [left, below ? my + GAP : Math.max(EDGE, my - GAP - H)];
     };
-    // Chaque image : la fenêtre suit le curseur avec un ressort, se tourne vers lui en 3D
-    // et penche dans le sens de son déplacement ; la capture glisse en parallaxe
-    // et le reflet se place du côté du curseur.
+    // Chaque image : la fenêtre suit le curseur avec un ressort amorti
     const follow = () => {
       const [tx, ty] = target();
       if (calm) { x = tx; y = ty; vx = vy = 0; }
@@ -809,19 +801,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
         vy = (vy + (ty - y) * SPRING) * DAMP; y += vy;
       }
       pv.style.transform = `translate3d(${x}px,${y}px,0)`;
-      let settled = Math.abs(tx - x) + Math.abs(ty - y) < .5 && Math.abs(vx) + Math.abs(vy) < .05;
-      if (!calm) {
-        const fx = clamp((mx - x - W / 2) / W), fy = clamp((my - y - H / 2) / H);
-        const tRy = fx * FACE_Y + clamp(vx / 30) * SWAY;
-        const tRx = -fy * FACE_X - clamp(vy / 30) * SWAY * .7;
-        const tRz = clamp(vx / 45) * 2.5;
-        ry += (tRy - ry) * .14; rx += (tRx - rx) * .14; rz += (tRz - rz) * .14;
-        tilt.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg)`;
-        layer.style.transform = `translate3d(${(-ry / FACE_Y * 3).toFixed(2)}%,${(rx / FACE_X * 3).toFixed(2)}%,0)`;
-        pv.style.setProperty('--gx', 50 + fx * 45 + '%');
-        pv.style.setProperty('--gy', 50 + fy * 45 + '%');
-        settled = settled && Math.abs(tRy - ry) + Math.abs(tRx - rx) + Math.abs(tRz - rz) < .05;
-      }
+      const settled = Math.abs(tx - x) + Math.abs(ty - y) < .5 && Math.abs(vx) + Math.abs(vy) < .05;
       raf = on || !settled ? requestAnimationFrame(follow) : 0;
     };
     // Deux images superposées pour un fondu propre d'un site à l'autre
@@ -845,7 +825,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
       // Repart du curseur seulement si la fenêtre a eu le temps de disparaître ;
       // sinon elle continue son trajet depuis là où elle est
       if (!on && performance.now() - hiddenAt > 400) {
-        [x, y] = target(); vx = vy = rx = ry = rz = 0;
+        [x, y] = target(); vx = vy = 0;
         pv.style.transform = `translate3d(${x}px,${y}px,0)`;
       }
       on = true; pv.classList.add('is-on');
