@@ -1,0 +1,15 @@
+Polices utilisées par la page d'accueil nsi.xyz
+
+Instrument Sans (titres)
+  Source : https://github.com/google/fonts/tree/main/ofl/instrumentsans
+  Fichier : InstrumentSans-SemiBold.woff2 (graisse 600, caractères latins)
+  Licence : SIL Open Font License 1.1, voir OFL-InstrumentSans.txt
+
+Geist (texte)
+  Source : https://github.com/google/fonts/tree/main/ofl/geist
+  Fichier : Geist-Variable.woff2 (graisses 400 à 600, caractères latins)
+  Licence : SIL Open Font License 1.1, voir OFL-Geist.txt
+
+Les fichiers ont été allégés (graisses et caractères inutilisés retirés),
+ce que la licence autorise. Les mentions de copyright et de licence sont
+conservées dans chaque fichier de police.
