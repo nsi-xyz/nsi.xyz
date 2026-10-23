@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Politique de confidentialité — nsi.xyz</title>
+<meta name="description" content="Ce que deviennent vos données quand vous utilisez le portail nsi.xyz et les sites de son écosystème.">
+<meta name="theme-color" content="#110a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%236d28d9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Arial' font-weight='700' font-size='20' fill='white'%3E%E2%88%9E%3C/text%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Instrument Sans";src:url(assets/fonts/InstrumentSans-SemiBold.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Geist";src:url(assets/fonts/Geist-Variable.woff2) format("woff2");font-weight:400 600;font-display:swap}
+:root{
+  --black:#110a22; --white:#fff; --light:#f8f5fd; --ink:#1d073b; --accent:#a78bfa; --accent-dk:#6d28d9;
+  --grad:linear-gradient(135deg,#8b5cf6 0%,#6d28d9 100%); --grad-text:linear-gradient(135deg,#ddd6fe 0%,#a78bfa 100%);
+  --w6:#ffffff0f; --w8:#ffffff14; --w12:#ffffff1f; --w50:#ffffff80; --w73:#ffffffba;
+  --d6:#1d073b0f; --d8:#1d073b14; --d50:#1d073b80; --d73:#1d073bba;
+  --f-display:"Instrument Sans",Arial,sans-serif; --f-body:"Geist",Arial,sans-serif; --f-mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --ease:cubic-bezier(.32,.72,0,1); --site:75rem; --gutter:clamp(1rem,4vw,2.5rem);
+  --sh-green:0 1px 0 0 #ffffff29 inset,0 0 8px 0 #ffffff70 inset,0 16px 32px 0 #8b5cf614,0 0 50px 0 #8b5cf61f;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--black);color:var(--white);font:400 15px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+h1,h2{font-family:var(--f-display);font-weight:600;letter-spacing:-.035em;line-height:1.1;margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--site);margin:0 auto;padding:0 var(--gutter)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.3rem 0}
+.logo{display:inline-flex;align-items:center;gap:.55rem;text-decoration:none;font:600 1.15rem/1 var(--f-display);letter-spacing:-.03em}
+.logo i{display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:7px;background:var(--grad);font:700 1.15rem/1 Arial,sans-serif;font-style:normal;box-shadow:0 0 18px #8b5cf640}
+.logo b{font-weight:600;color:var(--w50)}
+.nav__cta{display:flex;gap:.5rem}
+.btn{position:relative;display:inline-flex;align-items:center;min-height:2.4em;padding:.4em 1em;border-radius:.9em;font-weight:500;font-size:.875rem;text-decoration:none;isolation:isolate}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:#ffffff0f;outline:1px solid #ffffff0f;outline-offset:-1px;transition:inset .45s var(--ease)}
+.btn--main{font-weight:600}
+.btn--main::before{background:linear-gradient(0deg,#110a2229,#110a2229),var(--grad);box-shadow:var(--sh-green);outline:0}
+.btn:hover::before{inset:.125em}
+.hero{position:relative;padding:4.5rem 0 4rem;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(60% 80% at 30% 40%,#000,transparent 75%);mask-image:radial-gradient(60% 80% at 30% 40%,#000,transparent 75%)}
+.hero::after{content:"";position:absolute;left:10%;top:-30%;width:40rem;height:30rem;background:radial-gradient(closest-side,#a78bfa26,transparent);filter:blur(20px)}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{font:500 .75rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.hero h1{margin:1rem 0 1rem;font-size:clamp(2.4rem,6vw,4rem);max-width:18ch}
+.hero h1 span{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:40rem;color:var(--w73);font-size:1.05rem}
+.hero small{display:block;margin-top:1.2rem;color:var(--w50);font:400 .8rem var(--f-mono)}
+.sheet{margin:0 clamp(.25rem,1vw,.6rem);border-radius:28px;color:var(--ink);background:repeating-linear-gradient(135deg,var(--d6) 0 1px,transparent 1px 8px),var(--light)}
+.frame{display:grid;grid-template-columns:15rem minmax(0,1fr);max-width:calc(var(--site) - 2 * var(--gutter));margin:0 auto;border-inline:1px solid var(--d8);background:var(--light)}
+.toc{position:sticky;top:0;align-self:start;padding:3rem 1.5rem;border-right:1px solid var(--d8)}
+.toc b{display:block;margin-bottom:.9rem;font:500 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--d50)}
+.toc ol{margin:0;padding:0;list-style:none;display:grid;gap:.5rem;counter-reset:t}
+.toc a{display:block;font-size:.88rem;color:var(--d73);text-decoration:none;counter-increment:t}
+.toc a::before{content:counter(t,decimal-leading-zero) "  ";font:400 .75rem var(--f-mono);color:var(--accent-dk)}
+.toc a:hover{color:var(--ink)}
+.prose{padding:3rem clamp(1.25rem,5vw,4.5rem) 4.5rem;max-width:48rem}
+.summary{margin-bottom:2.5rem;padding:1.4rem 1.6rem;border-radius:18px;background:var(--white);box-shadow:0 0 0 1px #0656860a,0 3px 3px -1.5px #0122360f,0 24px 24px -12px #0656860a}
+.summary b{display:block;margin-bottom:.4rem;font:600 1.1rem var(--f-display)}
+.summary p{margin:0;color:var(--d73)}
+.prose section{scroll-margin-top:1.5rem;padding:2rem 0;border-top:1px solid var(--d8)}
+.prose section:first-of-type{border-top:0;padding-top:0}
+.prose h2{margin-bottom:1rem;font-size:1.6rem}
+.prose p,.prose li{color:var(--d73)}
+.prose ul{padding-left:1.2rem}
+.prose li{margin:.35rem 0}
+.prose strong{color:var(--ink);font-weight:500}
+.prose a{color:var(--accent-dk);text-underline-offset:3px}
+.prose address{font-style:normal;padding:1rem 1.2rem;border-radius:14px;background:#6d28d90d;color:var(--ink)}
+.footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem 2rem;padding:2rem 0 2.5rem;color:var(--w50);font-size:.82rem}
+.footer nav{display:flex;flex-wrap:wrap;gap:1.4rem}
+.footer a{color:var(--w73);text-decoration:none}
+.footer a:hover,.footer a[aria-current]{color:var(--white)}
+@media (max-width:860px){
+  .frame{grid-template-columns:1fr}
+  .toc{position:static;border-right:0;border-bottom:1px solid var(--d8);padding:2rem clamp(1.25rem,5vw,4.5rem)}
+}
+@media (max-width:560px){
+  .frame{border-inline:0}
+  .nav__cta .btn:not(.btn--main){display:none}
+}
+</style>
+</head>
+<body>
+<header class="wrap nav">
+  <a class="logo" href="index.html" aria-label="nsi.xyz, retour au portail"><i aria-hidden="true">∞</i><span>nsi<b>.xyz</b></span></a>
+  <div class="nav__cta">
+    <a class="btn" href="index.html">Retour au portail</a>
+    <a class="btn btn--main" href="https://login.nsi.xyz/">Se connecter</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">[ Informations légales ]</span>
+      <h1>Politique de <span>confidentialité</span></h1>
+      <p>Ce que deviennent vos données quand vous utilisez le portail nsi.xyz et les sites de son écosystème.</p>
+      <small>Dernière mise à jour : 23 octobre 2026</small>
+    </div>
+  </section>
+
+  <div class="sheet">
+    <div class="frame">
+      <nav class="toc" aria-label="Sommaire"><b>Sommaire</b><ol><li><a href="#responsable">Qui est responsable ?</a></li><li><a href="#portail">Le portail nsi.xyz</a></li><li><a href="#compte">Le compte nsi.xyz</a></li><li><a href="#sites">Les autres sites</a></li><li><a href="#droits">Vos droits</a></li></ol></nav>
+      <article class="prose">
+        <div class="summary"><b>En bref</b><p>Le portail lui-même ne collecte aucune donnée personnelle : pas de compte, pas de cookie, pas de mesure d’audience, pas de publicité. Seul le compte nsi.xyz, sur login.nsi.xyz, traite des données personnelles, uniquement pour vous identifier.</p></div>
+        <section id="responsable">
+          <h2>Qui est responsable ?</h2>
+          <p>Les sites du domaine nsi.xyz sont administrés par <strong>Vincent ROBERT</strong>, enseignant de la spécialité NSI. Pour toute question sur vos données, écrivez à <a href="mailto:contact@nsi.xyz">contact@nsi.xyz</a>.</p>
+        </section>
+        <section id="portail">
+          <h2>Le portail nsi.xyz</h2>
+          <ul>
+            <li><strong>Aucune donnée personnelle collectée</strong> : la page d’accueil ne propose ni compte, ni formulaire, ni commentaire.</li>
+            <li><strong>Aucun cookie</strong> et aucun outil de mesure d’audience ou de publicité.</li>
+            <li><strong>La recherche reste dans votre navigateur</strong> : ce que vous tapez dans la barre de recherche n’est envoyé nulle part.</li>
+            <li><strong>Aucun service tiers</strong> n’est contacté pendant la visite : polices, images et scripts sont servis depuis nsi.xyz.</li>
+          </ul>
+          <p>Comme tout hébergeur, Cloudflare traite des données techniques de connexion (adresse IP, type de navigateur) pour acheminer les pages et protéger le site contre les attaques. Voir la <a href="https://www.cloudflare.com/fr-fr/privacypolicy/">politique de confidentialité de Cloudflare</a>.</p>
+        </section>
+        <section id="compte">
+          <h2>Le compte nsi.xyz</h2>
+          <p>La connexion aux sites de l’écosystème passe par <strong>login.nsi.xyz</strong>, avec un compte Google ou GitHub. Aucun mot de passe n’y est géré. Ce service traite :</p>
+          <ul>
+            <li>l’identifiant fourni par Google ou GitHub, l’adresse e-mail, le nom et la photo de profil ;</li>
+            <li>l’identité déclarée (prénom, nom, date de naissance), uniquement pour reconnaître les élèves et repérer les doublons ;</li>
+            <li>l’adresse académique des enseignants, vérifiée par e-mail ;</li>
+            <li>le rôle et, le cas échéant, les classes ;</li>
+            <li>un journal technique des connexions (date, événement, adresse IP, navigateur) et les sessions ouvertes, que vous pouvez révoquer.</li>
+          </ul>
+          <p><strong>Pourquoi ?</strong> Pour vous authentifier, gérer les accès aux sites et assurer leur sécurité contre les accès non autorisés.</p>
+          <p><strong>Combien de temps ?</strong> Les journaux sont conservés pour une durée limitée. Les comptes élèves sont supprimés en fin de scolarité, sauf demande contraire.</p>
+          <p>La <a href="https://login.nsi.xyz/confidentialite">page de confidentialité de login.nsi.xyz</a> détaille ce traitement.</p>
+        </section>
+        <section id="sites">
+          <h2>Les autres sites</h2>
+          <p>Chaque site de l’écosystème peut préciser ses propres règles. Plusieurs outils, comme l’atelier web <strong>workspace.nsi.xyz</strong>, enregistrent vos travaux uniquement dans votre navigateur : rien n’est envoyé à un serveur.</p>
+          <p>Le portail contient aussi des liens vers des services extérieurs (Google, GitHub, NumWorks…). Une fois sur ces sites, ce sont leurs propres politiques de confidentialité qui s’appliquent.</p>
+        </section>
+        <section id="droits">
+          <h2>Vos droits</h2>
+          <p>Conformément au Règlement général sur la protection des données (RGPD), vous pouvez demander l’accès à vos données, leur rectification ou leur suppression, et vous opposer à leur traitement ou en demander la limitation. Écrivez à <a href="mailto:contact@nsi.xyz">contact@nsi.xyz</a>.</p>
+          <p>Si vous avez moins de 15 ans, vos parents peuvent exercer ces droits avec vous.</p>
+          <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la <a href="https://www.cnil.fr/fr/plaintes">CNIL</a>.</p>
+        </section>
+      </article>
+    </div>
+  </div>
+</main>
+
+<footer class="wrap footer">
+  <span>© 2026 nsi.xyz · Hébergé par Cloudflare, Inc.</span>
+  <nav aria-label="Pages légales"><a href="confidentialite.html" aria-current="page">Politique de confidentialité</a><a href="conditions.html">Conditions d’utilisation</a><a href="https://nsi.xyz/v2/">Archive</a></nav>
+</footer>
+</body>
+</html>
