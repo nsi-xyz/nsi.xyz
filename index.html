@@ -97,9 +97,10 @@ button.btn{border:0;background:none;font-family:inherit;cursor:pointer}
 .menu__group a{display:flex;align-items:center;gap:.7rem;padding:.45rem .55rem;border-radius:12px;transition:background .2s}
 .menu__group a:hover,.menu__group a:focus-visible{background:var(--w8)}
 .menu__group .tile{width:2rem;height:2rem;font-size:.7rem;border-radius:9px}
-.menu__group span{display:flex;flex-direction:column;min-width:0}
-.menu__group span b{font-weight:500;font-size:.9rem}
-.menu__group span small{color:var(--w50);font:400 .74rem var(--f-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu__group .tile--sym,.results .tile--sym{font-size:1rem}
+.menu__txt{display:flex;flex-direction:column;min-width:0}
+.menu__txt b{font-weight:500;font-size:.9rem}
+.menu__txt small{color:var(--w50);font:400 .74rem var(--f-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- Hero ---------- */
 .hero{position:relative;z-index:2;padding:calc(var(--nav-h) + 4.5rem) 0 4rem;text-align:center}
@@ -729,10 +730,10 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
             <div class="showcase__shots" aria-hidden="true"><img src="assets/apercus/epsilon.nsi.xyz.webp" alt="" loading="lazy" decoding="async" class="is-on"><img src="assets/apercus/omega.nsi.xyz.webp" alt="" loading="lazy" decoding="async"><img src="assets/apercus/psi.nsi.xyz.webp" alt="" loading="lazy" decoding="async"><div class="soon"><span class="tile">nm</span><b>Gestionnaire de scripts</b><p>En construction : il arrivera prochainement sur numaps.nsi.xyz pour ranger et transférer ses scripts Python NumWorks.</p><span class="tag">À venir prochainement</span></div></div>
           </div>
           <div class="tabs">
-          <a class="tab is-active" href="https://epsilon.nsi.xyz/" data-site data-tab="0" data-k="numworks calculatrice simulateur epsilon firmware"><b>Simulateur Epsilon</b><span>Le logiciel officiel de la calculatrice, tel qu’en classe.</span><small>epsilon.nsi.xyz</small></a>
-          <a class="tab" href="https://omega.nsi.xyz/" data-site data-tab="1" data-k="numworks calculatrice simulateur omega firmware"><b>Simulateur Omega</b><span>Le firmware alternatif développé par la communauté.</span><small>omega.nsi.xyz</small></a>
-          <a class="tab" href="https://psi.nsi.xyz/" data-site data-tab="2" data-k="numworks calculatrice simulateur psi firmware"><b>Simulateur Psi</b><span>Un autre firmware à essayer, sans calculatrice.</span><small>psi.nsi.xyz</small></a>
-          <a class="tab" href="https://numaps.nsi.xyz/" data-site data-tab="3" data-k="numworks scripts gestionnaire applications python calculatrice"><b>Gestionnaire de scripts</b><span>Ranger et transférer ses scripts Python NumWorks.</span><small>en construction · à venir prochainement</small></a>
+          <a class="tab is-active" href="https://epsilon.nsi.xyz/" data-site data-tile="ε" data-tab="0" data-k="numworks calculatrice simulateur epsilon firmware"><b>Simulateur Epsilon</b><span>Le logiciel officiel de la calculatrice, tel qu’en classe.</span><small>epsilon.nsi.xyz</small></a>
+          <a class="tab" href="https://omega.nsi.xyz/" data-site data-tile="Ω" data-tab="1" data-k="numworks calculatrice simulateur omega firmware"><b>Simulateur Omega</b><span>Le firmware alternatif développé par la communauté.</span><small>omega.nsi.xyz</small></a>
+          <a class="tab" href="https://psi.nsi.xyz/" data-site data-tile="Ψ" data-tab="2" data-k="numworks calculatrice simulateur psi firmware"><b>Simulateur Psi</b><span>Un autre firmware à essayer, sans calculatrice.</span><small>psi.nsi.xyz</small></a>
+          <a class="tab" href="https://numaps.nsi.xyz/" data-site data-tile="nm" data-tab="3" data-k="numworks scripts gestionnaire applications python calculatrice"><b>Gestionnaire de scripts</b><span>Ranger et transférer ses scripts Python NumWorks.</span><small>en construction · à venir prochainement</small></a>
           </div>
         </div>
       </section>
@@ -904,6 +905,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
   const list = document.getElementById('results');
   let matches = [], active = 0;
 
+  const sym = t => t.length === 1 && t.charCodeAt(0) > 127 ? ' tile--sym' : '';
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const render = () => {
     const terms = norm(q.value.trim()).split(/\s+/).filter(Boolean);
@@ -911,7 +913,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
     matches = sites.filter(s => terms.every(t => s.hay.includes(t)));
     active = 0;
     list.innerHTML = matches.length
-      ? matches.map((s, i) => `<li><a href="${s.href}" role="option" aria-selected="${i === 0}"><span class="tile tile--dark">${esc(s.tile)}</span><span class="results__txt"><b>${esc(s.title)}</b><small>${s.host}</small></span></a></li>`).join('')
+      ? matches.map((s, i) => `<li><a href="${s.href}" role="option" aria-selected="${i === 0}"><span class="tile tile--dark${sym(s.tile)}">${esc(s.tile)}</span><span class="results__txt"><b>${esc(s.title)}</b><small>${s.host}</small></span></a></li>`).join('')
       : `<li class="results__empty">Aucun site trouvé. Vous êtes <a href="https://perdu.nsi.xyz/">perdu</a> ?</li>`;
     list.hidden = false; q.setAttribute('aria-expanded', 'true');
   };
@@ -1222,7 +1224,7 @@ html [data-site][data-site]{transition:transform .25s,box-shadow .25s,background
   groupsEl.innerHTML = GROUPS.map(([sel, label]) => {
     const items = sites.filter(s => s.el.closest(sel) && !listed.has(s.host) && listed.add(s.host));
     return items.length ? `<div class="menu__group"><h4>${label}</h4><ul>${items.map(s =>
-      `<li><a href="${s.href}"><span class="tile tile--dark">${esc(s.tile)}</span><span><b>${esc(s.title)}</b><small>${s.host}</small></span></a></li>`).join('')}</ul></div>` : '';
+      `<li><a href="${s.href}"><span class="tile tile--dark${sym(s.tile)}">${esc(s.tile)}</span><span class="menu__txt"><b>${esc(s.title)}</b><small>${s.host}</small></span></a></li>`).join('')}</ul></div>` : '';
   }).join('');
   document.getElementById('menu-count').textContent = sites.length + ' sites';
   let opener = null;
