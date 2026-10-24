@@ -6,8 +6,8 @@ qui vérifies, commites et ouvres la pull request.
 
 ## Prérequis
 
-1. Ton compte GitHub est ajouté comme collaborateur du dépôt privé
-   `nsi-xyz/nsi.xyz`.
+1. Le dépôt `nsi-xyz/nsi.xyz` est **public** : tu peux faire un fork, ou demander
+   à l’enseignant de t’ajouter comme collaborateur.
 2. Git est installé et configuré (`git config --global user.name` et
    `user.email`).
 3. Ton outil d’IA sait ouvrir un dossier et lancer des commandes dans un terminal.

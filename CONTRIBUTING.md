@@ -14,8 +14,9 @@ et une **pull request** (PR).
 
 ### 1. Récupérer le dépôt
 
-Le dépôt est privé : demander à l’enseignant d’ajouter ton compte GitHub comme
-collaborateur, puis :
+Le dépôt est **public**. Tu peux travailler sur un fork, ou demander à
+l’enseignant de t’ajouter comme collaborateur pour pousser une branche
+directement. Dans les deux cas, la pull request devra être validée avant fusion.
 
 ```bash
 git clone git@github.com:nsi-xyz/nsi.xyz.git
