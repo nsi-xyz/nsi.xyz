@@ -1,8 +1,9 @@
 # Déploiement du portail
 
-> **Statut au 24/10/2026 : aucun déploiement automatique n’est encore actif.**
-> Le site public `nsi.xyz` sert toujours la page d’attente violette et l’archive
-> 2021-2026. Ce dépôt contient la future page d’accueil, pas la production.
+> **Statut au 24/10/2026 : en production sur https://nsi.xyz/.**
+> Le portail est à la racine ; l’archive 2021-2026 est servie sous `/v2/`.
+> La production est déployée par le script `outils-dev/deployer.sh`, pas
+> automatiquement à chaque push.
 
 ## Contrainte à garder en tête
 

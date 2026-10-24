@@ -4,10 +4,10 @@ Maquette du futur portail d’accueil de **nsi.xyz**, conçue par **Ethan M**, �
 en spécialité NSI, avec Claude Opus 5.5, puis reprise dans le cadre du chantier
 de migration du site.
 
-> **État : version de travail, non déployée.**
-> Le `nsi.xyz` public sert encore la page d’attente violette et l’archive 2021-2026.
-> Ce dépôt prépare la future page d’accueil ; il ne remplace rien en production
-> tant que la mise en ligne n’a pas été validée.
+> **État : en production depuis le 24/10/2026.**
+> `https://nsi.xyz/` sert ce portail ; l’archive 2021-2026 reste accessible sous
+> `/v2/`. Les modifications passent par une branche, une PR et la vérification,
+> puis sont déployées par le mainteneur.
 
 ## Ce que contient le dépôt
 

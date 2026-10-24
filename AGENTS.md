@@ -6,12 +6,14 @@ Le dépôt est un site statique : **pas de build, pas de framework, pas de serve
 
 ## 1. Contexte
 
-- Projet : future page d’accueil du portail **nsi.xyz**.
+- Projet : page d’accueil du portail **nsi.xyz**, en production depuis le
+  24/10/2026.
 - Public : élèves de seconde, première et terminale NSI, enseignants, visiteurs.
 - Langue : **français**, ton clair et direct, sans jargon inutile.
 - Auteur initial du design : Ethan M (élève), avec Claude Opus 5.5.
-- Le site public actuel est encore l’ancienne page d’attente : ce dépôt n’est
-  **pas** déployé en production. Ne pas promettre une mise en ligne.
+- L’archive 2021-2026 est servie sous `/v2/` ; les articles gardent leurs anciennes
+  URL. Une PR n’est **pas** déployée automatiquement : le mainteneur déploie
+  après fusion.
 
 ## 2. Périmètre
 
