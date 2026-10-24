@@ -87,10 +87,11 @@ description, captures avant/après, tests effectués.
 Les assistants IA sont les bienvenus, à condition de cadrer le travail :
 
 1. faire lire **`AGENTS.md`** (ou `CLAUDE.md` pour Claude Code) ;
-2. demander une modification **limitée** et une branche dédiée ;
-3. relire le diff avant de committer ;
-4. ne jamais coller un jeton GitHub, un mot de passe ou une clé dans le prompt ;
-5. vérifier le rendu et lancer `outils-dev/verifier.py` avant la PR.
+2. suivre [`docs/GUIDE_IA.md`](docs/GUIDE_IA.md) pour les prompts et les précautions ;
+3. demander une modification **limitée** et une branche dédiée ;
+4. relire le diff avant de committer ;
+5. ne jamais coller un jeton GitHub, un mot de passe ou une clé dans le prompt ;
+6. vérifier le rendu et lancer `outils-dev/verifier.py` avant la PR.
 
 Une IA peut proposer, mais c’est l’élève qui reste responsable de ce qui est
 envoyé.

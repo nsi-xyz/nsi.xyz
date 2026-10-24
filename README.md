@@ -59,7 +59,8 @@ Le dépôt est partagé pour fonctionner par **pull requests** :
 4. pousser la branche et ouvrir une pull request vers `main`.
 
 Le détail est dans [`CONTRIBUTING.md`](CONTRIBUTING.md). Si un assistant IA est
-utilisé, lui faire lire [`AGENTS.md`](AGENTS.md) avant toute modification.
+utilisé, lui faire lire [`AGENTS.md`](AGENTS.md) avant toute modification, et
+suivre [`docs/GUIDE_IA.md`](docs/GUIDE_IA.md).
 
 ## Droits et crédits
 
