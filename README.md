@@ -11,6 +11,8 @@ de migration du site.
 
 ## Ce que contient le dépôt
 
+Dépôt GitHub : **<https://github.com/nsi-xyz/portail>** (privé, accès sur invitation).
+
 | Élément | Rôle |
 |---|---|
 | `index.html` | page d’accueil complète (HTML, CSS et JavaScript dans un seul fichier) |

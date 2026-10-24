@@ -14,6 +14,9 @@ et une **pull request** (PR).
 
 ### 1. Récupérer le dépôt
 
+Le dépôt est privé : demander à l’enseignant d’ajouter ton compte GitHub comme
+collaborateur, puis :
+
 ```bash
 git clone git@github.com:nsi-xyz/portail.git
 cd portail
