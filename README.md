@@ -12,7 +12,7 @@ de migration du site.
 ## Ce que contient le dépôt
 
 Dépôt GitHub : **<https://github.com/nsi-xyz/nsi.xyz>** (public).  
-Dossier local : `portail/`.
+Dossier local de l’enseignant : `portail/` ; après clone : `nsi.xyz/`.
 
 | Élément | Rôle |
 |---|---|
@@ -33,7 +33,7 @@ migration : ces éléments restent dans le dossier local `migration/`, hors dép
 Aucun build, aucune dépendance : c’est du HTML/CSS/JS statique.
 
 ```bash
-cd portail
+cd nsi.xyz
 python3 -m http.server 8080
 ```
 

@@ -20,7 +20,7 @@ directement. Dans les deux cas, la pull request devra être validée avant fusio
 
 ```bash
 git clone git@github.com:nsi-xyz/nsi.xyz.git
-cd portail
+cd nsi.xyz
 ```
 
 ### 2. Créer une branche
