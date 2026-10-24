@@ -1,1 +1,16 @@
+# Outils locaux des assistants IA
 .claude/
+.agents/
+
+# Éditeurs et systèmes
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Fichiers temporaires
+*.log
+*.tmp
+*.bak
+node_modules/
+_site/
