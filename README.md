@@ -20,7 +20,7 @@ Dépôt GitHub : **<https://github.com/nsi-xyz/portail>** (privé, accès sur in
 | `confidentialite.html` | politique de confidentialité |
 | `assets/fonts/` | polices libres Geist et Instrument Sans (SIL OFL 1.1) |
 | `assets/apercus/` | captures d’écran des sites présentés (`hôte.webp`) |
-| `outils-dev/` | scripts de développement : vérification des liens, captures |
+| `outils-dev/` | scripts de développement : vérification des liens, captures, déploiement |
 | `docs/` | documentation du projet et historique des variantes |
 | `AGENTS.md`, `CLAUDE.md` | consignes pour les assistants IA |
 

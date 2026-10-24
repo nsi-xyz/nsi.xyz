@@ -14,6 +14,19 @@ Il contrôle les liens et assets locaux, les ancres, les identifiants HTML, les
 images sans `alt`, les polices référencées dans le CSS et les métadonnées de base.
 La même commande tourne dans GitHub Actions.
 
+## `deployer.sh`
+
+Déploie le portail **avec l’archive v2** vers le projet Cloudflare Pages
+`nsi-xyz`. Le script prend le dossier local de l’archive en argument, pour
+conserver les médias qui ne sont pas versionnés.
+
+```bash
+export CLOUDFLARE_API_TOKEN=…
+export CLOUDFLARE_ACCOUNT_ID=…
+./outils-dev/deployer.sh /chemin/vers/archive-v2 preview
+./outils-dev/deployer.sh /chemin/vers/archive-v2 production
+```
+
 ## `apercus.py`
 
 Outil historique de génération des captures `assets/apercus/*.webp`. Il dépend de

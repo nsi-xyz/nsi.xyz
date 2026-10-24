@@ -1,6 +1,7 @@
 # Outils locaux des assistants IA
 .claude/
 .agents/
+.deploy-staging/
 
 # Éditeurs et systèmes
 .vscode/

@@ -6,41 +6,48 @@
 
 ## Contrainte à garder en tête
 
-Le portail doit continuer à servir l’archive sous `/v2/` et le plan sous `/plan/`.
-Un domaine Cloudflare Pages ne pointe que vers **un seul projet** : il faut donc
-choisir explicitement comment assembler les deux.
+Le portail doit continuer à servir l’archive sous `/v2/`, `/plan/` et les
+anciennes URL d’articles. Un domaine Cloudflare Pages ne pointe que vers **un
+seul projet** : la production est donc construite en combinant le portail et
+l’archive dans un même déploiement.
 
-## Deux architectures possibles
+## Architecture retenue : un seul projet Pages
 
-### Option A — un seul projet Pages (recommandée à terme)
-
-Le dépôt `nsi-xyz/nsi.xyz` devient le dépôt de production unique :
+Le projet Cloudflare Pages **`nsi-xyz`** sert :
 
 ```
-/            → portail (fichiers de ce dépôt)
-/v2/         → archive 2021-2026 (déjà dans le dépôt de production)
-/plan/       → plan du site
+/                  → portail (fichiers de ce dépôt)
+/v2/               → accueil de l’archive 2021-2026
+/v2/plan/          → plan de l’archive (l’ancien /plan/ redirige)
+/projets/, /tutoriels/, /art/, /numapps/… → articles à leurs URL d’origine
+/wp-content/…      → médias de l’archive
 ```
 
-Les modifications validées dans `portail/` sont reportées dans le dépôt de
-production (copie des fichiers, ou fusion Git). Avantages : un seul projet, un
-seul domaine, pas de Worker de routage. Inconvénient : il faut organiser le
-report des PR validées.
+Le script `outils-dev/deployer.sh` :
 
-### Option B — projet Pages séparé
+1. copie l’archive locale (code + médias) dans un dossier de staging ;
+2. remplace la racine par les fichiers du portail ;
+3. déploie le tout vers le projet `nsi-xyz`.
 
-Un projet `portail-nsi-xyz` sert le portail, et un Worker route `/v2/*` et
-`/plan/*` vers le projet de l’archive. Plus souple pour les préversions, mais
-plus complexe à exploiter.
+```bash
+export CLOUDFLARE_API_TOKEN=…
+export CLOUDFLARE_ACCOUNT_ID=…
+./outils-dev/deployer.sh /chemin/vers/archive-v2 preview
+./outils-dev/deployer.sh /chemin/vers/archive-v2 production
+```
+
+Cette méthode conserve les 1,9 Go de médias de l’archive, qui ne sont pas dans
+Git. Si l’archive devient un jour déployée automatiquement depuis GitHub, il
+faudra d’abord intégrer ces médias (après optimisation WebP) ou les placer sur
+un stockage externe.
 
 ## Préversions des pull requests
 
-Dans les deux cas, l’objectif est qu’une PR produise une **URL de préversion** :
+Le dépôt `nsi-xyz/portail` peut être connecté à un projet Pages de préversion
+distinct (`portail-nsi-xyz`) pour obtenir une URL par PR. La production reste
+déployée par le script ci-dessus, après fusion et validation.
 
-- soit en connectant `nsi-xyz/portail` à un projet Pages de préversion ;
-- soit en générant un déploiement de préversion par GitHub Actions.
-
-Aucune PR ne doit être mergée sans avoir vérifié le rendu sur cette URL.
+Aucune PR ne doit être mergée sans avoir vérifié le rendu.
 
 ## Paramètres techniques
 
