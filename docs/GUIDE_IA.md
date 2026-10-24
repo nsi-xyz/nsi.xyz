@@ -7,7 +7,7 @@ qui vérifies, commites et ouvres la pull request.
 ## Prérequis
 
 1. Ton compte GitHub est ajouté comme collaborateur du dépôt privé
-   `nsi-xyz/portail`.
+   `nsi-xyz/nsi.xyz`.
 2. Git est installé et configuré (`git config --global user.name` et
    `user.email`).
 3. Ton outil d’IA sait ouvrir un dossier et lancer des commandes dans un terminal.
@@ -15,7 +15,7 @@ qui vérifies, commites et ouvres la pull request.
 ## Mise en place
 
 ```bash
-git clone git@github.com:nsi-xyz/portail.git
+git clone git@github.com:nsi-xyz/nsi.xyz.git
 cd portail
 ```
 
