@@ -1,0 +1,22 @@
+{
+  "name": "nsi.xyz — Numérique et Sciences de l’Informatique",
+  "short_name": "nsi.xyz",
+  "description": "Le portail de la spécialité NSI : sites, outils, projets et archive 2021-2026.",
+  "lang": "fr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#110a22",
+  "theme_color": "#110a22",
+  "icons": [
+    {
+      "src": "favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
