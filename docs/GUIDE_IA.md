@@ -16,11 +16,11 @@ qui vérifies, commites et ouvres la pull request.
 
 ```bash
 git clone git@github.com:nsi-xyz/nsi.xyz.git
-cd portail
+cd nsi.xyz
 ```
 
-Ouvre **le dossier `portail/`** dans ton IA, pas le dossier parent : le dépôt
-Git s’arrête à `portail/`, le reste du disque contient des sauvegardes qui ne
+Ouvre **le dossier `nsi.xyz/`** dans ton IA, pas le dossier parent : le dépôt
+Git s’arrête à `nsi.xyz/`, le reste du disque contient des sauvegardes qui ne
 doivent pas être touchées.
 
 Demande à l’IA de lire `AGENTS.md` **avant** de commencer. Ce fichier contient
