@@ -11,7 +11,8 @@ de migration du site.
 
 ## Ce que contient le dépôt
 
-Dépôt GitHub : **<https://github.com/nsi-xyz/portail>** (privé, accès sur invitation).
+Dépôt GitHub : **<https://github.com/nsi-xyz/nsi.xyz>** (public).  
+Dossier local : `portail/`.
 
 | Élément | Rôle |
 |---|---|

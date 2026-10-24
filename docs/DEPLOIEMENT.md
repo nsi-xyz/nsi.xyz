@@ -44,7 +44,7 @@ un stockage externe.
 
 ## Préversions des pull requests
 
-Le dépôt `nsi-xyz/portail` peut être connecté à un projet Pages de préversion
+Le dépôt `nsi-xyz/nsi.xyz` peut être connecté à un projet Pages de préversion
 distinct (`portail-nsi-xyz`) pour obtenir une URL par PR. La production reste
 déployée par le script ci-dessus, après fusion et validation.
 

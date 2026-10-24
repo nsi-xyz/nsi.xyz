@@ -18,7 +18,7 @@ Le dépôt est privé : demander à l’enseignant d’ajouter ton compte GitHub
 collaborateur, puis :
 
 ```bash
-git clone git@github.com:nsi-xyz/portail.git
+git clone git@github.com:nsi-xyz/nsi.xyz.git
 cd portail
 ```
 
